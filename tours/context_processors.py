@@ -50,6 +50,7 @@ def site(request):
         "CONTACT_PHONE": settings.CONTACT_PHONE,
         "CONTACT_EMAIL": settings.CONTACT_EMAIL,
         "FACEBOOK_URL": settings.FACEBOOK_URL,
+        "INSTAGRAM_URL": settings.INSTAGRAM_URL,
         "FOUNDER_NAME": settings.FOUNDER_NAME,
         "LOCATION": settings.LOCATION,
         "WHATSAPP_NUMBER": settings.WHATSAPP_NUMBER,

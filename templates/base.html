@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Manrope:wght@400;500;600;700;800&family=Caveat:wght@700&display=swap">
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
   <script>document.documentElement.classList.replace("no-js", "js");</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TravelAgency","name":"{{ SITE_NAME }}","url":"{{ request.scheme }}://{{ request.get_host }}/","logo":"{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}","telephone":"{{ CONTACT_PHONE }}","email":"{{ CONTACT_EMAIL }}","founder":"{{ FOUNDER_NAME }}","address":{"@type":"PostalAddress","addressLocality":"Moshi & Arusha","addressCountry":"TZ"},"sameAs":["{{ INSTAGRAM_URL }}","{{ FACEBOOK_URL }}"]}</script>
   {% block head %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">
@@ -92,6 +93,7 @@
           <div class="drawer-contacts">
             <a href="tel:+{{ WHATSAPP_NUMBER }}" aria-label="Call {{ CONTACT_PHONE }}">{% include "tours/_icon.html" with name="phone" %}</a>
             <a href="mailto:{{ CONTACT_EMAIL }}" aria-label="Email {{ CONTACT_EMAIL }}">{% include "tours/_icon.html" with name="mail" %}</a>
+            <a href="{{ INSTAGRAM_URL }}" target="_blank" rel="noopener" aria-label="Instagram">{% include "tours/_icon.html" with name="instagram" %}</a>
             <a href="{{ FACEBOOK_URL }}" target="_blank" rel="noopener" aria-label="Facebook">{% include "tours/_icon.html" with name="facebook" %}</a>
           </div>
         </div>
@@ -131,6 +133,7 @@
         <ul class="footer-contact">
           <li><a href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">{% include "tours/_icon.html" with name="whatsapp" %} {{ CONTACT_PHONE }}</a></li>
           <li><a href="mailto:{{ CONTACT_EMAIL }}">{% include "tours/_icon.html" with name="mail" %} {{ CONTACT_EMAIL }}</a></li>
+          <li><a href="{{ INSTAGRAM_URL }}" target="_blank" rel="noopener">{% include "tours/_icon.html" with name="instagram" %} @kili_wild_adventure</a></li>
           <li><a href="{{ FACEBOOK_URL }}" target="_blank" rel="noopener">{% include "tours/_icon.html" with name="facebook" %} Facebook</a></li>
           <li>{% include "tours/_icon.html" with name="pin" %} {{ LOCATION }}</li>
         </ul>
