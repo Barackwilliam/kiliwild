@@ -11,9 +11,11 @@ the trip, name, date, group size and a price estimate.
 ## Run locally
 
 ```bash
+git clone https://github.com/Barackwilliam/kiliwild.git
 cd kiliwild
 pip install -r requirements.txt
 cp env.example .env          # set DJANGO_DEBUG=True and leave the Supabase lines empty for local work
+                             # (Windows: copy env.example .env)
 python manage.py migrate
 python manage.py seed_kiliwild
 python manage.py createsuperuser
@@ -34,7 +36,6 @@ python manage.py runserver
 
 ## Deploy (Render)
 
-- Root directory: `kiliwild`
 - Build command: `./build.sh`
 - Start command: `gunicorn config.wsgi`
 - Environment: everything in `env.example` (`DJANGO_SECRET_KEY`, `ALLOWED_HOSTS`, `DATABASE_URL`, `SUPABASE_*`)
