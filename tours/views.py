@@ -11,10 +11,14 @@ from .models import CATEGORY_INFO, FAQ, Category, Destination, GalleryPhoto, Inc
 from .showcase import MAP_PLACES, SLIDES, TOUR_ORDER
 
 WHY_US = [
-    ("team", "100% local team", "Born and raised under Kilimanjaro. Our guides know every trail, camp and crater."),
-    ("shield", "Safety first", "Emergency oxygen, first aid kit and pulse oximeter on every climb, with licensed guides."),
-    ("tag", "Fair prices", "Clear group prices with park fees included – and fair pay for our crew."),
-    ("tree", "A tree for every climb", "We plant a tree for every climber, giving back to the mountain that hosts us."),
+    ("team", "100% local team", "Born and raised under Kilimanjaro. Our guides know every trail, camp and crater.",
+     "img/why/team.jpg"),
+    ("shield", "Safety first", "Emergency oxygen, first aid kit and pulse oximeter on every climb, with licensed guides.",
+     "img/why/safety.jpg"),
+    ("tag", "Fair prices", "Clear group prices with park fees included – and fair pay for our crew.",
+     "img/why/prices.jpg"),
+    ("tree", "A tree for every climb", "We plant a tree for every climber, giving back to the mountain that hosts us.",
+     "img/why/tree.jpg"),
 ]
 
 PAGE_CACHE_SECONDS = 600

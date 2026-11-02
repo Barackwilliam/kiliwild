@@ -806,3 +806,66 @@ a.contact-wa:hover { background: var(--wa-deep); border-color: var(--wa-deep); }
   .pf-line { stroke-dashoffset: 0; }
   .marquee { overflow-x: auto; }
 }
+
+/* ---------- why travel with us: photo cards (swipe rail on phones) */
+.why-section {
+  background:
+    radial-gradient(circle at 12% 10%, rgba(212, 160, 84, .16), transparent 38%),
+    radial-gradient(circle at 90% 90%, rgba(23, 58, 42, .08), transparent 40%),
+    var(--sand);
+  overflow: hidden;
+}
+.why-kicker { display: block; font: 700 1.8rem/1 var(--hand); color: var(--rust); margin-bottom: 10px; }
+.why-rail { width: min(1240px, 100% - 40px); margin: 0 auto; }
+.why-track { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; align-items: start; padding-bottom: 40px; }
+.why-card {
+  position: relative; aspect-ratio: 3 / 4.1; border-radius: 24px; overflow: hidden; isolation: isolate; color: #fff;
+  box-shadow: 0 24px 50px -22px rgba(13, 34, 24, .55); transition: box-shadow .5s var(--ease);
+}
+.why-card:nth-child(even) { margin-top: 40px; }
+.why-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transition: transform 1.4s var(--ease); }
+.why-card::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(180deg, rgba(6, 18, 11, .35) 0%, rgba(6, 18, 11, 0) 30%, rgba(6, 18, 11, .25) 55%, rgba(6, 18, 11, .92) 100%);
+}
+.why-card:hover img { transform: scale(1.08); }
+.why-card:hover { box-shadow: 0 34px 70px -24px rgba(13, 34, 24, .7); }
+.why-num {
+  position: absolute; top: 20px; left: 22px; font: 400 2.6rem/1 var(--display); color: var(--gold-soft);
+  letter-spacing: -.03em; text-shadow: 0 2px 16px rgba(0, 0, 0, .35);
+}
+.why-badge {
+  position: absolute; top: 20px; right: 20px; display: grid; place-items: center; width: 50px; height: 50px; border-radius: 50%;
+  background: rgba(255, 255, 255, .16); border: 1px solid rgba(255, 255, 255, .3); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+}
+.why-badge .icon { width: 24px; height: 24px; }
+.why-text { position: absolute; left: 0; right: 0; bottom: 0; padding: 26px 24px 24px; }
+.why-text h3 { color: #fff; font-size: 1.55rem; margin-bottom: .35em; }
+.why-text h3::after { content: ""; display: block; width: 36px; height: 2px; background: var(--gold); margin-top: 12px; transition: width .5s var(--ease); }
+.why-card:hover .why-text h3::after { width: 64px; }
+.why-text p { margin: 0; font-size: .93rem; line-height: 1.55; color: rgba(255, 255, 255, .86); }
+.why-dots { display: none; justify-content: center; gap: 6px; margin: 4px 0 26px; }
+.why-dots i { width: 8px; height: 8px; border-radius: 8px; background: var(--line); transition: width .3s var(--ease), background .3s; }
+.why-dots i.on { width: 26px; background: var(--rust); }
+.trust-strip { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.trust-strip li {
+  display: inline-flex; align-items: center; gap: 8px; padding: .7em 1.1em; border-radius: 999px; background: var(--paper);
+  border: 1px solid var(--line); font-weight: 700; font-size: .86rem; color: var(--forest-deep);
+}
+.trust-strip .icon { width: 16px; height: 16px; padding: 2px; border-radius: 50%; background: var(--leaf); color: #fff; }
+
+@media (max-width: 1060px) { .why-track { grid-template-columns: repeat(2, 1fr); } .why-card:nth-child(even) { margin-top: 0; } }
+@media (max-width: 760px) {
+  .why-rail {
+    width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-left: 16px;
+    scrollbar-width: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain;
+  }
+  .why-rail::-webkit-scrollbar { display: none; }
+  .why-track { display: flex; gap: 14px; padding: 6px 16px 18px; width: max-content; }
+  .why-card { flex: none; width: min(78vw, 320px); scroll-snap-align: start; }
+  .why-card.reveal { opacity: 1; transform: none; }
+  .why-dots { display: flex; }
+  .trust-strip { justify-content: flex-start; }
+  .trust-strip li { font-size: .8rem; }
+}

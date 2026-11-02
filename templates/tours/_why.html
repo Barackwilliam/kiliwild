@@ -1,0 +1,33 @@
+{% load static %}<section class="section why-section">
+  <div class="container">
+    <div class="section-head section-head-center reveal">
+      <span class="why-kicker">Kwa nini sisi?</span>
+      <h2>{{ why_title|default:"Why travellers choose us" }}</h2>
+      <p class="muted">Four promises we keep on every climb and every safari.</p>
+    </div>
+  </div>
+  <div class="why-rail" data-rail>
+    <div class="why-track" data-rail-track>
+      {% for icon, title, text, img in why_us %}
+      <article class="why-card reveal">
+        <img src="{% static img %}" alt="" loading="lazy" decoding="async">
+        <span class="why-num">{{ forloop.counter|stringformat:"02d" }}</span>
+        <span class="why-badge">{% include "tours/_icon.html" with name=icon %}</span>
+        <div class="why-text">
+          <h3>{{ title }}</h3>
+          <p>{{ text }}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="container">
+    <div class="why-dots" data-rail-dots aria-hidden="true">{% for x in why_us %}<i class="{% if forloop.first %}on{% endif %}"></i>{% endfor %}</div>
+    <ul class="trust-strip reveal">
+      <li>{% include "tours/_icon.html" with name="check" %} Licensed guides</li>
+      <li>{% include "tours/_icon.html" with name="check" %} Park fees included</li>
+      <li>{% include "tours/_icon.html" with name="check" %} Free airport pickup</li>
+      <li>{% include "tours/_icon.html" with name="check" %} Fast replies on WhatsApp</li>
+    </ul>
+  </div>
+</section>

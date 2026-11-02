@@ -389,3 +389,23 @@
     io.observe(stage);
   }
 })();
+
+// ---- swipe rail dots (why-us cards on phones)
+(function () {
+  "use strict";
+  document.querySelectorAll("[data-rail]").forEach(function (rail) {
+    var dots = rail.parentNode.querySelectorAll("[data-rail-dots] i");
+    var cards = rail.querySelectorAll(".why-card");
+    if (!dots.length || !cards.length) return;
+    var tick = false;
+    rail.addEventListener("scroll", function () {
+      if (tick) return; tick = true;
+      requestAnimationFrame(function () {
+        var w = cards[0].offsetWidth + 14;
+        var i = Math.min(cards.length - 1, Math.round(rail.scrollLeft / w));
+        dots.forEach(function (d, k) { d.classList.toggle("on", k === i); });
+        tick = false;
+      });
+    }, { passive: true });
+  });
+})();
