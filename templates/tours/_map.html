@@ -1,0 +1,171 @@
+{% load static %}<section class="section map-section" id="map">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Ramani inayoongea · The talking map</p>
+        <h2>Let the map tell you about Tanzania</h2>
+        <p class="muted">Tap any place on the map and it will tell you its story. Or press play for the full tour, from Kilimanjaro to the Serengeti.</p>
+      </div>
+      <button type="button" class="btn btn-primary" data-map-tour>
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg>
+        <span data-map-tour-label>Play the talking tour</span>
+      </button>
+    </div>
+
+    <div class="map-wrap">
+      <div class="map-stage" data-map>
+        <svg class="map-svg" viewBox="0 0 960 720" role="img" aria-labelledby="map-title">
+          <title id="map-title">Hand-drawn map of northern Tanzania with Kilimanjaro, Mount Meru, Arusha, Moshi, Tarangire, Lake Manyara, Ngorongoro Crater and the Serengeti</title>
+          <defs>
+            <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/>
+              <feDisplacementMap in="SourceGraphic" scale="7"/>
+            </filter>
+            <filter id="paper">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="3"/>
+              <feColorMatrix values="0 0 0 0 0.45  0 0 0 0 0.33  0 0 0 0 0.15  0 0 0 0.09 0"/>
+              <feComposite in2="SourceGraphic" operator="in"/>
+            </filter>
+            <pattern id="hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(40)">
+              <line x1="0" y1="0" x2="0" y2="9" stroke="#3f7a4e" stroke-width="1.4" stroke-opacity=".35"/>
+            </pattern>
+            <pattern id="waves" width="26" height="12" patternUnits="userSpaceOnUse">
+              <path d="M0 6 q6.5 -5 13 0 t13 0" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.2"/>
+            </pattern>
+            <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
+              <stop offset="60%" stop-color="#000" stop-opacity="0"/>
+              <stop offset="100%" stop-color="#6b4a1c" stop-opacity=".28"/>
+            </radialGradient>
+            <g id="acacia">
+              <path d="M0 0 v-16 M0 -10 l-7 -8 M0 -12 l6 -7" stroke="#3b2a17" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+              <path d="M-17 -19 q17 -11 34 0 q-17 5 -34 0z" fill="#4c6b3c"/>
+            </g>
+          </defs>
+
+          <!-- paper -->
+          <rect width="960" height="720" fill="#f2e3c2"/>
+          <rect width="960" height="720" filter="url(#paper)" fill="#fff"/>
+
+          <!-- Kenya -->
+          <path d="M150 0 L300 85 L528 198 L748 341 L860 392 L900 420 L913 528 L960 600 L960 0 Z" fill="#e7d3a9" filter="url(#rough)"/>
+          <path class="map-border" d="M150 0 L300 85 L528 198 L748 341 L860 392 L900 420 L913 528 L960 600" fill="none" filter="url(#rough)"/>
+          <text class="map-country" x="700" y="150" transform="rotate(-8 700 150)">K E N Y A</text>
+          <text class="map-country map-country-tz" x="600" y="700">T A N Z A N I A</text>
+
+          <!-- Lake Victoria -->
+          <path d="M0 30 C60 22 112 58 122 118 C130 178 96 210 116 262 C132 304 92 344 38 352 L0 354 Z" fill="#8db7c8" filter="url(#rough)"/>
+          <path d="M0 30 C60 22 112 58 122 118 C130 178 96 210 116 262 C132 304 92 344 38 352 L0 354 Z" fill="url(#waves)"/>
+          <text class="map-water" x="48" y="250" transform="rotate(-78 48 250)">Lake Victoria</text>
+
+          <!-- other lakes -->
+          <g filter="url(#rough)">
+            <ellipse cx="530" cy="262" rx="14" ry="32" fill="#c9a7b3"/>
+            <ellipse cx="322" cy="528" rx="58" ry="12" transform="rotate(32 322 528)" fill="#a9c6cf"/>
+            <ellipse cx="476" cy="515" rx="11" ry="42" transform="rotate(14 476 515)" fill="#a9c6cf"/>
+          </g>
+          <text class="map-water" x="548" y="262">L. Natron</text>
+          <text class="map-water" x="262" y="575" transform="rotate(32 262 575)">L. Eyasi</text>
+
+          <!-- parks -->
+          <g filter="url(#rough)">
+            <path d="M110 170 C170 120 280 100 360 140 C420 175 440 260 400 330 C360 380 250 385 180 350 C120 320 90 240 110 170 Z" fill="#c9cf98"/>
+            <path d="M110 170 C170 120 280 100 360 140 C420 175 440 260 400 330 C360 380 250 385 180 350 C120 320 90 240 110 170 Z" fill="url(#hatch)"/>
+            <ellipse cx="412" cy="440" rx="78" ry="56" fill="#d3d2a0"/>
+            <ellipse cx="540" cy="615" rx="46" ry="62" fill="#c9cf98"/>
+            <ellipse cx="540" cy="615" rx="46" ry="62" fill="url(#hatch)"/>
+            <circle cx="690" cy="446" r="34" fill="#c9cf98" opacity=".8"/>
+          </g>
+          <!-- Ngorongoro crater -->
+          <circle cx="420" cy="440" r="27" fill="#9dbb7a" stroke="#6b5636" stroke-width="5" stroke-dasharray="3 3" filter="url(#rough)"/>
+          <circle cx="424" cy="444" r="7" fill="#a9c6cf"/>
+
+          <!-- trees -->
+          <use href="#acacia" x="180" y="220"/><use href="#acacia" x="300" y="180"/><use href="#acacia" x="230" y="320"/>
+          <use href="#acacia" x="350" y="280"/><use href="#acacia" x="150" y="290"/><use href="#acacia" x="560" y="600"/>
+          <use href="#acacia" x="520" y="650"/><use href="#acacia" x="600" y="520"/><use href="#acacia" x="740" y="600"/>
+
+          <!-- mountains -->
+          <g class="map-mtn">
+            <path d="M752 446 L803 386 Q825 362 847 386 L900 446 Z" fill="#6b7556" filter="url(#rough)"/>
+            <path d="M803 386 Q825 362 847 386 L839 394 L831 386 L823 396 L815 387 L809 393 Z" fill="#fff"/>
+            <path d="M770 446 L800 408 M880 446 L852 410" stroke="#4f593f" stroke-width="2" fill="none"/>
+            <path d="M656 466 L681 430 Q689 420 697 430 L724 466 Z" fill="#7d8562" filter="url(#rough)"/>
+            <path d="M681 430 Q689 420 697 430 L692 434 L688 430 L684 435 Z" fill="#fff"/>
+          </g>
+
+          <!-- routes -->
+          <path class="map-route" data-route="safari" d="M668 486 C620 560 585 605 540 618 C518 590 500 560 492 520 C470 490 446 465 420 440 C380 380 322 320 262 250"/>
+          <path class="map-route map-route-climb" data-route="climb" d="M830 478 C838 452 832 428 825 405"/>
+          <path class="map-route map-route-climb" data-route="meru" d="M668 486 C676 470 682 455 688 440"/>
+
+          <!-- airport -->
+          <g transform="translate(756 512)" class="map-airport">
+            <path d="M0 -9 L2 -2 L10 2 L10 4 L2 2 L1.5 7 L4 9 L4 10.5 L0 9.5 L-4 10.5 L-4 9 L-1.5 7 L-2 2 L-10 4 L-10 2 L-2 -2 Z" fill="#3b2a17" transform="rotate(-70)"/>
+            <text x="14" y="5">JRO airport</text>
+          </g>
+
+          <!-- compass: Maasai shield -->
+          <g transform="translate(880 625)" class="map-compass">
+            <ellipse rx="27" ry="42" fill="#f5eedd" stroke="#2b1d10" stroke-width="3"/>
+            <path d="M0 -42 V42" stroke="#2b1d10" stroke-width="3"/>
+            <path d="M-27 0 a27 42 0 0 1 27 -42 v20 a12 20 0 0 0 -12 22z" fill="#b8321e"/>
+            <path d="M27 0 a27 42 0 0 1 -27 42 v-20 a12 20 0 0 0 12 -22z" fill="#b8321e"/>
+            <path d="M-27 0 a27 42 0 0 0 27 42 v-20 a12 20 0 0 1 -12 -22z" fill="#1b1b1b"/>
+            <path d="M27 0 a27 42 0 0 0 -27 -42 v20 a12 20 0 0 1 12 22z" fill="#1b1b1b"/>
+            <circle r="5" fill="#e8b32a" stroke="#2b1d10" stroke-width="2"/>
+            <text y="-50" text-anchor="middle">N</text>
+          </g>
+
+          <!-- cartouche -->
+          <g transform="translate(36 610)" class="map-cartouche">
+            <rect width="250" height="82" rx="6" fill="#f8efdb" stroke="#3b2a17" stroke-width="2"/>
+            <rect x="5" y="5" width="240" height="72" rx="4" fill="none" stroke="#b5601e" stroke-width="1" stroke-dasharray="4 3"/>
+            <text class="ct-title" x="125" y="38" text-anchor="middle">Ramani ya Safari</text>
+            <text class="ct-sub" x="125" y="60" text-anchor="middle">Northern Tanzania · Kili Wild Adventure</text>
+          </g>
+          <g transform="translate(36 588)" class="map-scale">
+            <rect width="44" height="6" fill="#3b2a17"/><rect x="44" width="44" height="6" fill="#f8efdb" stroke="#3b2a17"/>
+            <text x="0" y="-5">0</text><text x="80" y="-5">50 km</text>
+          </g>
+
+          <rect width="960" height="720" fill="url(#vignette)" pointer-events="none"/>
+
+          <!-- pins -->
+          {% for p in places %}
+          <g class="pin pin-{{ p.kind }}" transform="translate({{ p.x }} {{ p.y }})" data-pin="{{ p.key }}" tabindex="0" role="button" aria-label="{{ p.name }} – hear its story">
+            <circle class="pin-pulse" r="12"/>
+            <path class="pin-drop" d="M0 0 C-4 -8 -12 -13 -12 -22 a12 12 0 0 1 24 0 c0 9 -8 14 -12 22z"/>
+            <circle class="pin-dot" cy="-22" r="4.5"/>
+            <text class="pin-label" x="{{ p.lx }}" y="{{ p.ly }}" text-anchor="{{ p.anchor }}">{{ p.label }}</text>
+          </g>
+          {% endfor %}
+        </svg>
+        <div class="map-bubble" data-map-bubble hidden><span data-map-bubble-text></span></div>
+      </div>
+
+      <aside class="map-card" data-map-card aria-live="polite">
+        <div class="map-card-media">
+          <img src="{% static 'img/map/kilimanjaro.jpg' %}" alt="" data-mc-img>
+          <span class="map-card-fact" data-mc-fact>Tap a place on the map</span>
+        </div>
+        <div class="map-card-body">
+          <p class="eyebrow" data-mc-sw>Karibu Tanzania</p>
+          <h3 data-mc-name>Where will your story begin?</h3>
+          <p data-mc-say>Every pin on this map has something to tell you. Tap one to hear about the mountain, the town or the park, and see the trips that go there.</p>
+          <div class="map-card-actions">
+            <button type="button" class="btn btn-outline btn-sm" data-mc-listen>
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
+              <span data-mc-listen-label>Listen</span>
+            </button>
+            <a class="link-arrow" href="{% url 'tours:category' 'kilimanjaro' %}" data-mc-link>Start with Kilimanjaro {% include "tours/_icon.html" with name="arrow" %}</a>
+          </div>
+          <div class="map-chips" role="group" aria-label="Places on the map">
+            {% for p in places %}<button type="button" data-chip="{{ p.key }}">{{ p.name }}</button>{% endfor %}
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+  {{ places|json_script:"map-places" }}
+  {{ tour_order|json_script:"map-tour" }}
+</section>

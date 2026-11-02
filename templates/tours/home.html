@@ -2,25 +2,48 @@
 {% block body_class %}page-home{% endblock %}
 {% block content %}
 
-<section class="hero" style="--hero: url('{% static 'img/hero.jpg' %}')">
+<section class="hero hero-slides" data-slider>
+  <div class="slides" aria-hidden="true">
+    {% for img, word, caption in slides %}
+    <div class="slide{% if forloop.first %} is-active{% endif %}" data-slide>
+      <img src="{% static img %}" alt="" {% if not forloop.first %}loading="lazy"{% endif %}>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="hero-shade"></div>
+  <svg class="hero-kili" viewBox="0 0 1200 140" preserveAspectRatio="none" aria-hidden="true"><path d="M0 140 L0 118 C120 110 200 96 300 100 C420 104 470 70 560 42 C600 30 640 24 680 30 C760 44 800 84 900 92 C1000 100 1100 108 1200 104 L1200 140 Z"/></svg>
   <div class="container hero-inner">
-    <p class="eyebrow eyebrow-light">Locally owned · Moshi & Arusha, Tanzania</p>
-    <h1>From the Roof of Africa<br>to the Serengeti plains.</h1>
+    <p class="eyebrow eyebrow-light"><span class="karibu">Karibu Tanzania</span> · Locally owned in Moshi & Arusha</p>
+    <h1>From the Roof of Africa<br>to the <em>Serengeti</em> plains.</h1>
     <p class="lead">Kilimanjaro climbs, Mount Meru treks and Big Five safaris with a 100% local team. Clear group prices, park fees included, and a tree planted for every climber.</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="{% url 'tours:category' 'kilimanjaro' %}">Climb Kilimanjaro {% include "tours/_icon.html" with name="arrow" %}</a>
-      <a class="btn btn-ghost" href="{% url 'tours:category' 'safari' %}">See safaris</a>
+      <a class="btn btn-ghost" href="#map">Explore the talking map</a>
     </div>
   </div>
-  <div class="container">
-    <dl class="hero-stats">
-      <div><dt>5,895m</dt><dd>Uhuru Peak</dd></div>
-      <div><dt>4 routes</dt><dd>up Kilimanjaro</dd></div>
-      <div><dt>3–5 days</dt><dd>Big Five safaris</dd></div>
-      <div><dt>1 tree</dt><dd>planted per climber</dd></div>
-    </dl>
+  <div class="container hero-bottom">
+    <div class="slide-caption" aria-live="polite">
+      {% for img, word, caption in slides %}
+      <p class="{% if forloop.first %}is-active{% endif %}" data-caption><strong>{{ word }}</strong><span>{{ caption }}</span></p>
+      {% endfor %}
+    </div>
+    <div class="slide-dots" role="tablist" aria-label="Choose photo">
+      {% for img, word, caption in slides %}
+      <button type="button" role="tab" class="{% if forloop.first %}is-active{% endif %}" data-dot="{{ forloop.counter0 }}" aria-label="{{ word }}"><i></i></button>
+      {% endfor %}
+    </div>
   </div>
+  <div class="beads beads-bottom" aria-hidden="true"></div>
 </section>
+
+<div class="stats-band">
+  <dl class="container hero-stats">
+    <div><dt>5,895m</dt><dd>Uhuru Peak</dd></div>
+    <div><dt>4 routes</dt><dd>up Kilimanjaro</dd></div>
+    <div><dt>3–5 days</dt><dd>Big Five safaris</dd></div>
+    <div><dt>1 tree</dt><dd>planted per climber</dd></div>
+  </dl>
+</div>
 
 {% if kili %}
 <section class="section">
@@ -40,6 +63,9 @@
 </section>
 {% endif %}
 
+{% include "tours/_map.html" %}
+
+<div class="beads" aria-hidden="true"></div>
 <section class="section band-forest">
   <div class="container">
     <div class="section-head section-head-center">
@@ -57,6 +83,8 @@
     </div>
   </div>
 </section>
+
+<div class="beads" aria-hidden="true"></div>
 
 {% if safaris %}
 <section class="section">
@@ -122,19 +150,20 @@
 </section>
 
 {% if photos %}
-<section class="section section-tight">
+<section class="section section-tight postcards-section">
   <div class="container">
     <div class="section-head">
       <div>
-        <p class="eyebrow">Gallery</p>
-        <h2>Moments from the trail</h2>
+        <p class="eyebrow">Gallery · Picha</p>
+        <h2>Postcards from the trail</h2>
       </div>
       <a class="link-arrow" href="{% url 'tours:gallery' %}">See all photos {% include "tours/_icon.html" with name="arrow" %}</a>
     </div>
-    <div class="photo-strip">
-      {% for ph in photos %}
-        <a href="{% url 'tours:gallery' %}"><img src="{{ ph.image.url }}" alt="{{ ph.caption }}" loading="lazy"></a>
-      {% endfor %}
+  </div>
+  <div class="marquee" aria-label="Photos from our trips">
+    <div class="marquee-track">
+      {% for ph in photos %}<a class="postcard" href="{% url 'tours:gallery' %}"><img src="{{ ph.image.url }}" alt="{{ ph.caption }}" loading="lazy"><span>{{ ph.caption }}</span></a>{% endfor %}
+      {% for ph in photos %}<a class="postcard" href="{% url 'tours:gallery' %}" aria-hidden="true" tabindex="-1"><img src="{{ ph.image.url }}" alt="" loading="lazy"><span>{{ ph.caption }}</span></a>{% endfor %}
     </div>
   </div>
 </section>

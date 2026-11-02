@@ -1,8 +1,11 @@
 from django.db.models import Prefetch
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
+from django.templatetags.static import static
+from django.urls import reverse
 
 from .models import CATEGORY_INFO, Category, GalleryPhoto, Inclusion, Package
+from .showcase import MAP_PLACES, SLIDES, TOUR_ORDER
 
 WHY_US = [
     ("team", "100% local team", "Born and raised under Kilimanjaro. Our guides know every trail, camp and crater."),
@@ -16,6 +19,16 @@ def active_packages():
     return Package.objects.filter(is_active=True)
 
 
+def map_places():
+    """Map places with real URLs, for the page and for the map script (json_script)."""
+    places = []
+    for p in MAP_PLACES:
+        name, arg = p["link"]
+        places.append({**p, "photo": static(p["photo"]), "url": reverse(name, args=[arg] if arg else None),
+                       "link": None})
+    return places
+
+
 def home(request):
     packages = active_packages().filter(is_featured=True)
     return render(request, "tours/home.html", {
@@ -23,8 +36,11 @@ def home(request):
         "safaris": [p for p in packages if p.category == Category.SAFARI],
         "meru": [p for p in packages if p.category == Category.MERU][:1],
         "combo": [p for p in packages if p.category == Category.COMBO][:1],
-        "photos": GalleryPhoto.objects.filter(is_active=True).order_by("?")[:8],
+        "photos": GalleryPhoto.objects.filter(is_active=True).order_by("?")[:14],
         "why_us": WHY_US,
+        "slides": SLIDES,
+        "places": map_places(),
+        "tour_order": TOUR_ORDER,
     })
 
 
