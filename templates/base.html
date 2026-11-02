@@ -34,9 +34,10 @@
       </a>
       <nav class="site-nav" aria-label="Main">
         <ul>
-          {% for url, label, note, active in menu %}{% if label != "Combo Offers" %}
-            <li><a href="{{ url }}" {% if active %}aria-current="page"{% endif %}>{{ label }}</a></li>
+          {% for t in nav_trips %}{% if t.slug != "combo" %}
+            <li><a href="{{ t.url }}" {% if t.active %}aria-current="page"{% endif %}>{{ t.label }}</a></li>
           {% endif %}{% endfor %}
+          {% for pg in nav_pages %}<li><a href="{{ pg.url }}" {% if pg.active %}aria-current="page"{% endif %}>{{ pg.label }}</a></li>{% endfor %}
         </ul>
         <a class="btn btn-wa btn-sm" href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">
           {% include "tours/_icon.html" with name="whatsapp" %} Book now
@@ -51,27 +52,50 @@
   <div class="drawer" id="drawer" data-drawer aria-hidden="true">
     <button class="drawer-backdrop" type="button" tabindex="-1" aria-label="Close menu" data-drawer-close></button>
     <div class="drawer-panel" role="dialog" aria-modal="true" aria-label="Menu">
-      <div class="drawer-head">
-        <a class="brand" href="{% url 'tours:home' %}">
-          <img src="{% static 'img/logo.png' %}" alt="" width="44" height="44" loading="lazy">
-          <span class="brand-text"><strong>Kili Wild</strong><span>Adventure</span></span>
-        </a>
-        <button class="drawer-close" type="button" aria-label="Close menu" data-drawer-close>{% include "tours/_icon.html" with name="x" %}</button>
-      </div>
-      <ul class="drawer-nav">
-        <li><a href="{% url 'tours:home' %}" {% if request.path == '/' %}aria-current="page"{% endif %}><span><strong>Home</strong><small>Karibu Tanzania</small></span>{% include "tours/_icon.html" with name="arrow" %}</a></li>
-        {% for url, label, note, active in menu %}
-          <li><a href="{{ url }}" {% if active %}aria-current="page"{% endif %}><span><strong>{{ label }}</strong><small>{{ note }}</small></span>{% include "tours/_icon.html" with name="arrow" %}</a></li>
-        {% endfor %}
-      </ul>
-      <div class="drawer-foot">
-        <a class="btn btn-wa btn-block" href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">{% include "tours/_icon.html" with name="whatsapp" %} Book on WhatsApp</a>
-        <div class="drawer-contacts">
-          <a href="tel:+{{ WHATSAPP_NUMBER }}">{% include "tours/_icon.html" with name="phone" %} Call</a>
-          <a href="mailto:{{ CONTACT_EMAIL }}">{% include "tours/_icon.html" with name="mail" %} Email</a>
-          <a href="{{ FACEBOOK_URL }}" target="_blank" rel="noopener">{% include "tours/_icon.html" with name="facebook" %} Facebook</a>
+      <div class="drawer-hero">
+        <img src="{% static 'img/slides/kilimanjaro.jpg' %}" alt="" loading="lazy" decoding="async">
+        <div class="drawer-hero-top">
+          <a class="brand" href="{% url 'tours:home' %}">
+            <img src="{% static 'img/logo.png' %}" alt="" width="42" height="42" loading="lazy">
+            <span class="brand-text"><strong>Kili Wild</strong><span>Adventure</span></span>
+          </a>
+          <button class="drawer-close" type="button" aria-label="Close menu" data-drawer-close>{% include "tours/_icon.html" with name="x" %}</button>
         </div>
-        <p>{{ LOCATION }} · {{ CONTACT_PHONE }}</p>
+        <div class="drawer-hero-text">
+          <span class="hand">Karibu Tanzania</span>
+          <strong>Where will your adventure begin?</strong>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+        <p class="drawer-label">Trips</p>
+        <ul class="drawer-trips">
+          {% for t in nav_trips %}
+          <li><a href="{{ t.url }}" {% if t.active %}aria-current="page"{% endif %}>
+            <img src="{{ t.thumb }}" alt="" width="56" height="56" loading="lazy" decoding="async">
+            <span><strong>{{ t.label }}</strong><small>{{ t.note }}</small></span>
+            {% include "tours/_icon.html" with name="chevron-right" %}
+          </a></li>
+          {% endfor %}
+        </ul>
+
+        <p class="drawer-label">Explore</p>
+        <ul class="drawer-tiles">
+          {% for pg in nav_pages %}
+          <li><a href="{{ pg.url }}" {% if pg.active %}aria-current="page"{% endif %}>{% include "tours/_icon.html" with name=pg.icon %}<span><strong>{{ pg.label }}</strong><small>{{ pg.note }}</small></span></a></li>
+          {% endfor %}
+        </ul>
+
+        <div class="drawer-cta">
+          <p><strong>Plan your trip with a local</strong>Tell us your dates – we reply fast on WhatsApp.</p>
+          <a class="btn btn-wa btn-block" href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">{% include "tours/_icon.html" with name="whatsapp" %} Chat on WhatsApp</a>
+          <div class="drawer-contacts">
+            <a href="tel:+{{ WHATSAPP_NUMBER }}" aria-label="Call {{ CONTACT_PHONE }}">{% include "tours/_icon.html" with name="phone" %}</a>
+            <a href="mailto:{{ CONTACT_EMAIL }}" aria-label="Email {{ CONTACT_EMAIL }}">{% include "tours/_icon.html" with name="mail" %}</a>
+            <a href="{{ FACEBOOK_URL }}" target="_blank" rel="noopener" aria-label="Facebook">{% include "tours/_icon.html" with name="facebook" %}</a>
+          </div>
+        </div>
+        <p class="drawer-meta">{{ LOCATION }} · {{ CONTACT_PHONE }}</p>
       </div>
     </div>
   </div>

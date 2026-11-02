@@ -35,7 +35,7 @@
     };
     openBtn.addEventListener("click", open);
     drawer.querySelectorAll("[data-drawer-close]").forEach(function (b) { b.addEventListener("click", close); });
-    drawer.querySelectorAll(".drawer-nav a").forEach(function (a) { a.addEventListener("click", close); });
+    drawer.querySelectorAll(".drawer-body a").forEach(function (a) { a.addEventListener("click", close); });
     document.addEventListener("keydown", function (e) {
       if (!root.classList.contains("drawer-open")) return;
       if (e.key === "Escape") close();
