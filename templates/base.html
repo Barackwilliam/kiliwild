@@ -1,0 +1,95 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ SITE_NAME }} – Kilimanjaro Climbs & Tanzania Safaris{% endblock %}</title>
+  <meta name="description" content="{% block description %}Kili Wild Adventure – locally owned tour operator in Moshi & Arusha. Kilimanjaro climbs, Mount Meru, Serengeti & Ngorongoro safaris. Book on WhatsApp {{ CONTACT_PHONE }}.{% endblock %}">
+  <meta property="og:site_name" content="{{ SITE_NAME }}">
+  <meta property="og:title" content="{% block og_title %}{{ SITE_NAME }}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Unforgettable hikes, safaris & cultural journeys across Tanzania.{% endblock %}">
+  <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/hero.jpg' %}{% endblock %}">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#1E4A31">
+  <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'img/favicon.png' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  {% block head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header" data-header>
+    <div class="container header-inner">
+      <a class="brand" href="{% url 'tours:home' %}" aria-label="{{ SITE_NAME }} – home">
+        <img src="{% static 'img/logo.png' %}" alt="" width="52" height="52">
+        <span class="brand-text"><strong>Kili Wild</strong><span>Adventure</span></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+        {% include "tours/_icon.html" with name="menu" %}<span class="sr-only">Menu</span>
+      </button>
+      <nav class="site-nav" id="site-nav" data-nav>
+        <ul>
+          {% for slug, label in nav_categories %}
+            <li><a href="{% url 'tours:category' slug %}" {% if slug in request.path %}aria-current="page"{% endif %}>{{ label }}</a></li>
+          {% endfor %}
+          <li><a href="{% url 'tours:gallery' %}" {% if request.resolver_match.url_name == 'gallery' %}aria-current="page"{% endif %}>Gallery</a></li>
+          <li><a href="{% url 'tours:about' %}" {% if request.resolver_match.url_name == 'about' %}aria-current="page"{% endif %}>About</a></li>
+          <li><a href="{% url 'tours:contact' %}" {% if request.resolver_match.url_name == 'contact' %}aria-current="page"{% endif %}>Contact</a></li>
+        </ul>
+        <a class="btn btn-wa btn-sm" href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">
+          {% include "tours/_icon.html" with name="whatsapp" %} Book on WhatsApp
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">{% block content %}{% endblock %}</main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <img src="{% static 'img/logo.png' %}" alt="{{ SITE_NAME }} logo" width="96" height="96" loading="lazy">
+        <p>Unforgettable hikes, safaris & cultural journeys across Tanzania – from the Kilimanjaro summit to the Serengeti, Ngorongoro Crater & Lake Manyara.</p>
+      </div>
+      <div>
+        <h3>Trips</h3>
+        <ul>
+          {% for slug, label in nav_categories %}<li><a href="{% url 'tours:category' slug %}">{{ label }}</a></li>{% endfor %}
+        </ul>
+      </div>
+      <div>
+        <h3>Company</h3>
+        <ul>
+          <li><a href="{% url 'tours:about' %}">About us</a></li>
+          <li><a href="{% url 'tours:gallery' %}">Gallery</a></li>
+          <li><a href="{% url 'tours:contact' %}">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Get in touch</h3>
+        <ul class="footer-contact">
+          <li><a href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">{% include "tours/_icon.html" with name="whatsapp" %} {{ CONTACT_PHONE }}</a></li>
+          <li><a href="mailto:{{ CONTACT_EMAIL }}">{% include "tours/_icon.html" with name="mail" %} {{ CONTACT_EMAIL }}</a></li>
+          <li><a href="{{ FACEBOOK_URL }}" target="_blank" rel="noopener">{% include "tours/_icon.html" with name="facebook" %} Facebook</a></li>
+          <li>{% include "tours/_icon.html" with name="pin" %} {{ LOCATION }}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© {% now "Y" %} {{ SITE_NAME }}. Founded by {{ FOUNDER_NAME }}.</span>
+      <span>Licensed & professional · We plant a tree for every climb</span>
+    </div>
+  </footer>
+
+  <a class="wa-float" href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">
+    {% include "tours/_icon.html" with name="whatsapp" %}
+  </a>
+
+  <script src="{% static 'js/site.js' %}" defer></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% load static %}
+{% block title %}{{ info.title|default:category_label }} | {{ SITE_NAME }}{% endblock %}
+{% block description %}{{ info.tagline }} {{ info.intro }}{% endblock %}
+{% block og_title %}{{ info.title|default:category_label }} – {{ SITE_NAME }}{% endblock %}
+{% block content %}
+<section class="page-hero" {% with packages|first as top %}{% if top.image %}style="--hero: url('{{ top.image.url }}')"{% endif %}{% endwith %}>
+  <div class="container">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'tours:home' %}">Home</a> <span>/</span> {{ category_label }}</nav>
+    <h1>{{ info.title|default:category_label }}</h1>
+    {% if info.tagline %}<p class="lead">{{ info.tagline }}</p>{% endif %}
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    {% if info.intro %}<p class="intro">{{ info.intro }}</p>{% endif %}
+    <div class="grid grid-3">
+      {% for p in packages %}{% include "tours/_card.html" %}{% endfor %}
+    </div>
+  </div>
+</section>
+
+{% include "tours/_cta.html" %}
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}{% load static %}
+{% block title %}Gallery | {{ SITE_NAME }}{% endblock %}
+{% block description %}Photos from our Kilimanjaro climbs, Mount Meru treks and Tanzania safaris – Serengeti, Ngorongoro Crater, Tarangire and Lake Manyara.{% endblock %}
+{% block content %}
+<section class="page-hero" style="--hero: url('{% static 'img/safari.jpg' %}')">
+  <div class="container">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'tours:home' %}">Home</a> <span>/</span> Gallery</nav>
+    <h1>Gallery</h1>
+    <p class="lead">Summits, safaris and the people who made it there.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="filters" role="group" aria-label="Filter photos" data-filters>
+      <button type="button" class="is-active" data-filter="all">All</button>
+      {% for value, label in kinds %}<button type="button" data-filter="{{ value }}">{{ label }}</button>{% endfor %}
+    </div>
+    {% if photos %}
+    <div class="masonry" data-gallery>
+      {% for ph in photos %}
+      <figure data-kind="{{ ph.kind }}">
+        <button type="button" data-open="{{ forloop.counter0 }}" aria-label="Open photo: {{ ph.caption|default:'photo' }}">
+          <img src="{{ ph.image.url }}" alt="{{ ph.caption }}" loading="lazy">
+        </button>
+        {% if ph.caption %}<figcaption>{{ ph.caption }}</figcaption>{% endif %}
+      </figure>
+      {% endfor %}
+    </div>
+    {% else %}
+      <p class="muted">Photos are coming soon.</p>
+    {% endif %}
+  </div>
+</section>
+
+<dialog class="lightbox" data-lightbox aria-label="Photo viewer">
+  <button type="button" class="lb-close" data-lb-close aria-label="Close">{% include "tours/_icon.html" with name="x" %}</button>
+  <button type="button" class="lb-nav lb-prev" data-lb-prev aria-label="Previous photo">{% include "tours/_icon.html" with name="chevron-left" %}</button>
+  <figure><img src="" alt="" data-lb-img><figcaption data-lb-cap></figcaption></figure>
+  <button type="button" class="lb-nav lb-next" data-lb-next aria-label="Next photo">{% include "tours/_icon.html" with name="chevron-right" %}</button>
+</dialog>
+
+{% include "tours/_cta.html" with cta_title="Want to be in the next photo?" %}
+{% endblock %}

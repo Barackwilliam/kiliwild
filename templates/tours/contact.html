@@ -1,0 +1,61 @@
+{% extends "base.html" %}{% load static %}
+{% block title %}Contact | {{ SITE_NAME }}{% endblock %}
+{% block description %}Book your Kilimanjaro climb or Tanzania safari with Kili Wild Adventure. WhatsApp {{ CONTACT_PHONE }} · {{ CONTACT_EMAIL }} · Moshi & Arusha.{% endblock %}
+{% block content %}
+<section class="page-hero" style="--hero: url('{% static 'img/hero.jpg' %}')">
+  <div class="container">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'tours:home' %}">Home</a> <span>/</span> Contact</nav>
+    <h1>Let's plan your adventure</h1>
+    <p class="lead">The fastest way to reach us is WhatsApp – we reply quickly.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container contact-layout">
+    <div class="contact-cards">
+      <a class="contact-card contact-wa" href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">
+        {% include "tours/_icon.html" with name="whatsapp" %}
+        <span><small>WhatsApp & phone</small>{{ CONTACT_PHONE }}</span>
+      </a>
+      <a class="contact-card" href="mailto:{{ CONTACT_EMAIL }}">
+        {% include "tours/_icon.html" with name="mail" %}
+        <span><small>Email</small>{{ CONTACT_EMAIL }}</span>
+      </a>
+      <a class="contact-card" href="{{ FACEBOOK_URL }}" target="_blank" rel="noopener">
+        {% include "tours/_icon.html" with name="facebook" %}
+        <span><small>Facebook</small>Kili Wild Adventure</span>
+      </a>
+      <div class="contact-card">
+        {% include "tours/_icon.html" with name="pin" %}
+        <span><small>Offices</small>{{ LOCATION }}</span>
+      </div>
+    </div>
+
+    <form class="book-card" data-book-form data-number="{{ WHATSAPP_NUMBER }}"
+          action="https://wa.me/{{ WHATSAPP_NUMBER }}" method="get" target="_blank">
+      <h2>Send us your trip details</h2>
+      <label>Your name <input type="text" name="name" autocomplete="name" required></label>
+      <label>Trip
+        <select name="trip" data-trip>
+          <option value="">Not sure yet – help me choose</option>
+          {% regroup packages by category_label as groups %}
+          {% for g in groups %}
+          <optgroup label="{{ g.grouper }}">
+            {% for p in g.list %}<option>{{ p.title }}</option>{% endfor %}
+          </optgroup>
+          {% endfor %}
+        </select>
+      </label>
+      <div class="row-2">
+        <label>Travel date <input type="date" name="date"></label>
+        <label>People <input type="number" name="people" min="1" max="40" value="2"></label>
+      </div>
+      <label>Message <span class="optional">(optional)</span>
+        <textarea name="message" rows="4" placeholder="Tell us what you have in mind…"></textarea>
+      </label>
+      <input type="hidden" name="text" value="Hello Kili Wild Adventure! I'd like to plan a trip.">
+      <button class="btn btn-wa btn-block" type="submit">{% include "tours/_icon.html" with name="whatsapp" %} Send on WhatsApp</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

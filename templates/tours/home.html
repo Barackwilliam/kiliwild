@@ -1,0 +1,144 @@
+{% extends "base.html" %}{% load static tours_extras %}
+{% block body_class %}page-home{% endblock %}
+{% block content %}
+
+<section class="hero" style="--hero: url('{% static 'img/hero.jpg' %}')">
+  <div class="container hero-inner">
+    <p class="eyebrow eyebrow-light">Locally owned · Moshi & Arusha, Tanzania</p>
+    <h1>From the Roof of Africa<br>to the Serengeti plains.</h1>
+    <p class="lead">Kilimanjaro climbs, Mount Meru treks and Big Five safaris with a 100% local team. Clear group prices, park fees included, and a tree planted for every climber.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="{% url 'tours:category' 'kilimanjaro' %}">Climb Kilimanjaro {% include "tours/_icon.html" with name="arrow" %}</a>
+      <a class="btn btn-ghost" href="{% url 'tours:category' 'safari' %}">See safaris</a>
+    </div>
+  </div>
+  <div class="container">
+    <dl class="hero-stats">
+      <div><dt>5,895m</dt><dd>Uhuru Peak</dd></div>
+      <div><dt>4 routes</dt><dd>up Kilimanjaro</dd></div>
+      <div><dt>3–5 days</dt><dd>Big Five safaris</dd></div>
+      <div><dt>1 tree</dt><dd>planted per climber</dd></div>
+    </dl>
+  </div>
+</section>
+
+{% if kili %}
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Kilimanjaro</p>
+        <h2>Pick your route to Uhuru Peak</h2>
+        <p class="muted">Every climb includes park fees, a licensed guide, cook and porters, emergency oxygen and airport pickup.</p>
+      </div>
+      <a class="link-arrow" href="{% url 'tours:category' 'kilimanjaro' %}">All Kilimanjaro packages {% include "tours/_icon.html" with name="arrow" %}</a>
+    </div>
+    <div class="grid grid-4">
+      {% for p in kili %}{% include "tours/_card.html" %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section band-forest">
+  <div class="container">
+    <div class="section-head section-head-center">
+      <p class="eyebrow eyebrow-light">Why travel with us</p>
+      <h2>Your gateway to Tanzania's wild heart</h2>
+    </div>
+    <div class="grid grid-4 why-grid">
+      {% for icon, title, text in why_us %}
+      <div class="why">
+        <span class="why-icon">{% include "tours/_icon.html" with name=icon %}</span>
+        <h3>{{ title }}</h3>
+        <p>{{ text }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% if safaris %}
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Safari</p>
+        <h2>Serengeti, Ngorongoro & beyond</h2>
+        <p class="muted">4x4 pop-up roof jeeps, lodges or tented camps, all meals and all park fees.</p>
+      </div>
+      <a class="link-arrow" href="{% url 'tours:category' 'safari' %}">All safaris {% include "tours/_icon.html" with name="arrow" %}</a>
+    </div>
+    <div class="grid grid-3">
+      {% for p in safaris %}{% include "tours/_card.html" %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if meru or combo %}
+<section class="section section-tight">
+  <div class="container grid grid-2 feature-pair">
+    {% for p in meru %}
+    <a class="feature" href="{{ p.get_absolute_url }}">
+      <img src="{% if p.image %}{{ p.image.url }}{% else %}{% static 'img/hero.jpg' %}{% endif %}" alt="" loading="lazy">
+      <div class="feature-body">
+        <p class="eyebrow eyebrow-light">Mount Meru · 4,566m</p>
+        <h3>Tanzania's second-highest peak</h3>
+        <p>Wildlife on the trail, huts every night and far fewer people. The perfect warm-up for Kilimanjaro.</p>
+        <span class="feature-price">3 or 4 days · from {{ p.price_from|usd }}</span>
+      </div>
+    </a>
+    {% endfor %}
+    {% for p in combo %}
+    <a class="feature feature-rust" href="{{ p.get_absolute_url }}">
+      <img src="{% if p.image %}{{ p.image.url }}{% else %}{% static 'img/hero.jpg' %}{% endif %}" alt="" loading="lazy">
+      <div class="feature-body">
+        <p class="eyebrow eyebrow-light">Combo offer · {{ p.badge }}</p>
+        <h3>{{ p.title }}</h3>
+        <p>{{ p.subtitle }}. Acclimatize on Meru, then summit Kilimanjaro stronger.</p>
+        <span class="feature-price">{{ p.duration_days }} days · {{ p.price_from|usd }} per person</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="section">
+  <div class="container about-split">
+    <div class="about-photos">
+      <img src="{% static 'img/summit-team.jpg' %}" alt="Our climbers celebrating at Uhuru Peak" loading="lazy">
+      <img src="{% static 'img/team-gate.jpg' %}" alt="A Kili Wild Adventure group at the park gate" loading="lazy">
+    </div>
+    <div>
+      <p class="eyebrow">About us</p>
+      <h2>A local company, founded under the mountain</h2>
+      <p>Kili Wild Adventure is a locally owned travel company based in Moshi & Arusha, founded by <strong>{{ FOUNDER_NAME }}</strong>. We specialize in authentic, safe and affordable adventures – from the Kilimanjaro summit to the Serengeti, Ngorongoro Crater and Lake Manyara.</p>
+      <p>Our guides, cooks and porters are all from here. We know the trails, we look after each other, and we'll make your dream trip unforgettable.</p>
+      <a class="btn btn-outline" href="{% url 'tours:about' %}">Our story</a>
+    </div>
+  </div>
+</section>
+
+{% if photos %}
+<section class="section section-tight">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Gallery</p>
+        <h2>Moments from the trail</h2>
+      </div>
+      <a class="link-arrow" href="{% url 'tours:gallery' %}">See all photos {% include "tours/_icon.html" with name="arrow" %}</a>
+    </div>
+    <div class="photo-strip">
+      {% for ph in photos %}
+        <a href="{% url 'tours:gallery' %}"><img src="{{ ph.image.url }}" alt="{{ ph.caption }}" loading="lazy"></a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% include "tours/_cta.html" %}
+{% endblock %}

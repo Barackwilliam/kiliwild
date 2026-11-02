@@ -1,0 +1,143 @@
+{% extends "base.html" %}{% load static tours_extras %}
+{% block title %}{{ package.title }} – {{ package.category_label }} | {{ SITE_NAME }}{% endblock %}
+{% block description %}{{ package.summary }}{% if package.price_from %} From {{ package.price_from|usd }} {{ package.price_note }}.{% endif %}{% endblock %}
+{% block og_title %}{{ package.title }} – {{ SITE_NAME }}{% endblock %}
+{% block og_description %}{{ package.summary }}{% endblock %}
+{% block og_image %}{% if package.image %}{{ package.image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+{% block content %}
+<section class="page-hero page-hero-tall" {% if package.image %}style="--hero: url('{{ package.image.url }}')"{% endif %}>
+  <div class="container">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="{% url 'tours:home' %}">Home</a> <span>/</span>
+      <a href="{% url 'tours:category' package.category %}">{{ package.category_label }}</a> <span>/</span>
+      {{ package.title }}
+    </nav>
+    {% if package.badge %}<span class="badge badge-static">{{ package.badge }}</span>{% endif %}
+    <h1>{{ package.title }}</h1>
+    {% if package.subtitle %}<p class="lead">{{ package.subtitle }}</p>{% endif %}
+  </div>
+</section>
+
+<div class="container detail-layout">
+  <div class="detail-main">
+    <ul class="facts">
+      <li>{% include "tours/_icon.html" with name="clock" %}<span><small>Duration</small>{{ package.duration_days }} days</span></li>
+      {% if package.max_altitude %}<li>{% include "tours/_icon.html" with name="mountain" %}<span><small>Highest point</small>{{ package.max_altitude }}</span></li>{% endif %}
+      {% if package.accommodation %}<li>{% include "tours/_icon.html" with name="bed" %}<span><small>Sleeping</small>{{ package.accommodation }}</span></li>{% endif %}
+      {% if package.best_for %}<li>{% include "tours/_icon.html" with name="target" %}<span><small>Best for</small>{{ package.best_for }}</span></li>{% endif %}
+    </ul>
+
+    <section class="block">
+      <p class="summary">{{ package.summary }}</p>
+      {% if package.why %}<p>{{ package.why }}</p>{% endif %}
+    </section>
+
+    {% if package.itinerary.all %}
+    <section class="block">
+      <h2>Itinerary</h2>
+      <ol class="timeline">
+        {% for d in package.itinerary.all %}
+        <li>
+          <span class="tl-day">{{ d.day_label }}</span>
+          <div>
+            <h3>{{ d.title }}</h3>
+            {% if d.description %}<p>{{ d.description }}</p>{% endif %}
+          </div>
+        </li>
+        {% endfor %}
+      </ol>
+    </section>
+    {% endif %}
+
+    {% if tiers %}
+    <section class="block" id="prices">
+      <h2>Group prices</h2>
+      <p class="muted">Price per person in US dollars. The bigger the group, the better the price.</p>
+      <table class="price-table">
+        <thead><tr><th scope="col">Group size</th><th scope="col">Per person</th></tr></thead>
+        <tbody>
+          {% for t in tiers %}
+          <tr class="{% if t.is_best %}is-best{% endif %}" data-tier data-min="{{ t.size_range.0 }}" data-max="{{ t.size_range.1 }}" data-price="{{ t.price }}">
+            <td>{{ t.group_size }}{% if t.is_best %} <span class="pill">Best price</span>{% endif %}</td>
+            <td><strong>{{ t.price|usd }}</strong></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+    {% endif %}
+
+    {% if included or excluded %}
+    <section class="block">
+      <h2>What's included</h2>
+      <div class="incl-grid">
+        {% if included %}
+        <ul class="incl incl-yes">
+          {% for i in included %}<li>{% include "tours/_icon.html" with name="check" %}<span>{{ i.text }}</span></li>{% endfor %}
+        </ul>
+        {% endif %}
+        {% if excluded %}
+        <div>
+          <h3 class="incl-title">Not included</h3>
+          <ul class="incl incl-no">
+            {% for i in excluded %}<li>{% include "tours/_icon.html" with name="x" %}<span>{{ i.text }}</span></li>{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+      </div>
+    </section>
+    {% endif %}
+
+    {% if package.tips_note or package.extra_notes_list %}
+    <section class="block note">
+      {% include "tours/_icon.html" with name="info" %}
+      <div>
+        <h3>Good to know</h3>
+        <ul>
+          {% if package.tips_note %}<li>{{ package.tips_note }}</li>{% endif %}
+          {% for line in package.extra_notes_list %}<li>{{ line }}</li>{% endfor %}
+        </ul>
+      </div>
+    </section>
+    {% endif %}
+  </div>
+
+  <aside class="detail-side">
+    <form class="book-card" data-book-form data-package="{{ package.title }}" data-number="{{ WHATSAPP_NUMBER }}"
+          action="https://wa.me/{{ WHATSAPP_NUMBER }}" method="get" target="_blank">
+      <div class="book-price">
+        {% if package.price_from %}
+          <span>From</span> <strong>{{ package.price_from|usd }}</strong>
+          <small>{{ package.price_note }}</small>
+        {% else %}
+          <strong>Price on request</strong><small>{{ package.price_note|default:"Ask us on WhatsApp" }}</small>
+        {% endif %}
+      </div>
+      <h2>Book this trip</h2>
+      <label>Your name <input type="text" name="name" autocomplete="name" required></label>
+      <div class="row-2">
+        <label>Travel date <input type="date" name="date"></label>
+        <label>People <input type="number" name="people" min="1" max="40" value="2" data-people></label>
+      </div>
+      <p class="estimate" data-estimate hidden></p>
+      <label>Message <span class="optional">(optional)</span>
+        <textarea name="message" rows="3" placeholder="Questions, hotel, gear rental…"></textarea>
+      </label>
+      <input type="hidden" name="text" value="Hello Kili Wild Adventure! I'd like to book: {{ package.title }}">
+      <button class="btn btn-wa btn-block" type="submit">{% include "tours/_icon.html" with name="whatsapp" %} Send on WhatsApp</button>
+      <p class="book-small">Opens WhatsApp with your details filled in. Booking goes straight to our team on {{ CONTACT_PHONE }}.</p>
+    </form>
+  </aside>
+</div>
+
+{% if related %}
+<section class="section section-tight">
+  <div class="container">
+    <h2 class="related-title">More {{ package.category_label }} trips</h2>
+    <div class="grid grid-3">
+      {% for p in related %}{% include "tours/_card.html" %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
