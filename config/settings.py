@@ -14,7 +14,10 @@ def _load_dotenv(path):
     """Local development: KEY=value lines from .env (git-ignored). Real environment variables win."""
     if not path.exists():
         return
-    for line in path.read_text(encoding="utf-8").splitlines():
+    raw = path.read_bytes()
+    # Windows editors/PowerShell may save .env as UTF-16 or UTF-8 with a BOM.
+    text = raw.decode("utf-16") if raw[:2] in (b"\xff\xfe", b"\xfe\xff") else raw.decode("utf-8-sig")
+    for line in text.splitlines():
         line = line.strip()
         if not line or line.startswith("#") or "=" not in line:
             continue
