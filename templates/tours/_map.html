@@ -1,6 +1,6 @@
-{% load static %}<section class="section map-section" id="map">
+{% load static %}<section class="section map-section band-paper" id="map">
   <div class="container">
-    <div class="section-head">
+    <div class="section-head reveal">
       <div>
         <p class="eyebrow">Ramani inayoongea · The talking map</p>
         <h2>Let the map tell you about Tanzania</h2>
@@ -152,7 +152,8 @@
           <p class="eyebrow" data-mc-sw>Karibu Tanzania</p>
           <h3 data-mc-name>Where will your story begin?</h3>
           <p data-mc-say>Every pin on this map has something to tell you. Tap one to hear about the mountain, the town or the park, and see the trips that go there.</p>
-          <div class="map-card-actions">
+          <a class="map-more" href="{% url 'tours:destinations' %}" data-mc-more>Read the full story of each place →</a>
+          <div class="map-card-actions" style="margin-top:14px">
             <button type="button" class="btn btn-outline btn-sm" data-mc-listen>
               <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
               <span data-mc-listen-label>Listen</span>

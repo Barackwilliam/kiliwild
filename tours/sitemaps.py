@@ -1,7 +1,7 @@
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 
-from .models import Package
+from .models import Destination, Package
 
 
 class PackageSitemap(Sitemap):
@@ -19,7 +19,15 @@ class StaticSitemap(Sitemap):
     priority = 0.6
 
     def items(self):
-        return ["tours:home", "tours:about", "tours:gallery", "tours:contact"]
+        return ["tours:home", "tours:destinations", "tours:about", "tours:gallery", "tours:contact"]
 
     def location(self, item):
         return reverse(item)
+
+
+class DestinationSitemap(Sitemap):
+    changefreq = "monthly"
+    priority = 0.7
+
+    def items(self):
+        return Destination.objects.filter(is_active=True)

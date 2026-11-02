@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% load static %}
+{% block title %}Destinations – parks, mountains & towns | {{ SITE_NAME }}{% endblock %}
+{% block description %}Serengeti, Ngorongoro Crater, Tarangire, Lake Manyara, Kilimanjaro, Mount Meru, Arusha and Moshi – everything you need to know about the places we visit.{% endblock %}
+{% block content %}
+{% static 'img/slides/crater.jpg' as hero %}
+{% include "tours/_page_hero.html" with image=hero title="Destinations" lead="The parks, mountains and towns of northern Tanzania – and what makes each one special." eyebrow="Where we go" %}
+
+{% for label, items in groups %}{% if items %}
+<section class="section{% if not forloop.first %} section-tight{% endif %}">
+  <div class="container">
+    <div class="section-head reveal"><div><p class="eyebrow">{{ label }}</p><h2>{% if forloop.first %}Wildlife & wild places{% elif label == "Mountains" %}Africa's great peaks{% else %}Where your trip begins{% endif %}</h2></div></div>
+    <div class="dest-grid">
+      {% for d in items %}
+      <a class="dest reveal" href="{{ d.get_absolute_url }}">
+        {% if d.image %}<img src="{{ d.image.url }}" alt="" loading="lazy" decoding="async">{% endif %}
+        <div class="dest-body">
+          <span class="hand">{{ d.swahili }}</span>
+          <h3>{{ d.name }}</h3>
+          <p>{{ d.tagline }}</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}{% endfor %}
+
+{% include "tours/_cta.html" %}
+{% endblock %}

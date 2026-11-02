@@ -1,22 +1,26 @@
 {% load static %}<!doctype html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>{% block title %}{{ SITE_NAME }} – Kilimanjaro Climbs & Tanzania Safaris{% endblock %}</title>
   <meta name="description" content="{% block description %}Kili Wild Adventure – locally owned tour operator in Moshi & Arusha. Kilimanjaro climbs, Mount Meru, Serengeti & Ngorongoro safaris. Book on WhatsApp {{ CONTACT_PHONE }}.{% endblock %}">
+  <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
   <meta property="og:site_name" content="{{ SITE_NAME }}">
   <meta property="og:title" content="{% block og_title %}{{ SITE_NAME }}{% endblock %}">
   <meta property="og:description" content="{% block og_description %}Unforgettable hikes, safaris & cultural journeys across Tanzania.{% endblock %}">
   <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/hero.jpg' %}{% endblock %}">
   <meta property="og:type" content="website">
-  <meta name="theme-color" content="#1E4A31">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#0d2218">
   <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
   <link rel="apple-touch-icon" href="{% static 'img/favicon.png' %}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Zilla+Slab:wght@600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Manrope:wght@400;500;600;700;800&family=Caveat:wght@700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Manrope:wght@400;500;600;700;800&family=Caveat:wght@700&display=swap">
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  <script>document.documentElement.classList.replace("no-js", "js");</script>
   {% block head %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">
@@ -25,34 +29,62 @@
   <header class="site-header" data-header>
     <div class="container header-inner">
       <a class="brand" href="{% url 'tours:home' %}" aria-label="{{ SITE_NAME }} – home">
-        <img src="{% static 'img/logo.png' %}" alt="" width="52" height="52">
+        <img src="{% static 'img/logo.png' %}" alt="" width="50" height="50">
         <span class="brand-text"><strong>Kili Wild</strong><span>Adventure</span></span>
       </a>
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
-        {% include "tours/_icon.html" with name="menu" %}<span class="sr-only">Menu</span>
-      </button>
-      <nav class="site-nav" id="site-nav" data-nav>
+      <nav class="site-nav" aria-label="Main">
         <ul>
-          {% for slug, label in nav_categories %}
-            <li><a href="{% url 'tours:category' slug %}" {% if slug in request.path %}aria-current="page"{% endif %}>{{ label }}</a></li>
-          {% endfor %}
-          <li><a href="{% url 'tours:gallery' %}" {% if request.resolver_match.url_name == 'gallery' %}aria-current="page"{% endif %}>Gallery</a></li>
-          <li><a href="{% url 'tours:about' %}" {% if request.resolver_match.url_name == 'about' %}aria-current="page"{% endif %}>About</a></li>
-          <li><a href="{% url 'tours:contact' %}" {% if request.resolver_match.url_name == 'contact' %}aria-current="page"{% endif %}>Contact</a></li>
+          {% for url, label, note, active in menu %}{% if label != "Combo Offers" %}
+            <li><a href="{{ url }}" {% if active %}aria-current="page"{% endif %}>{{ label }}</a></li>
+          {% endif %}{% endfor %}
         </ul>
         <a class="btn btn-wa btn-sm" href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">
-          {% include "tours/_icon.html" with name="whatsapp" %} Book on WhatsApp
+          {% include "tours/_icon.html" with name="whatsapp" %} Book now
         </a>
       </nav>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="drawer" data-drawer-open>
+        Menu {% include "tours/_icon.html" with name="menu" %}
+      </button>
     </div>
   </header>
+
+  <div class="drawer" id="drawer" data-drawer aria-hidden="true">
+    <button class="drawer-backdrop" type="button" tabindex="-1" aria-label="Close menu" data-drawer-close></button>
+    <div class="drawer-panel" role="dialog" aria-modal="true" aria-label="Menu">
+      <div class="drawer-head">
+        <a class="brand" href="{% url 'tours:home' %}">
+          <img src="{% static 'img/logo.png' %}" alt="" width="44" height="44" loading="lazy">
+          <span class="brand-text"><strong>Kili Wild</strong><span>Adventure</span></span>
+        </a>
+        <button class="drawer-close" type="button" aria-label="Close menu" data-drawer-close>{% include "tours/_icon.html" with name="x" %}</button>
+      </div>
+      <ul class="drawer-nav">
+        <li><a href="{% url 'tours:home' %}" {% if request.path == '/' %}aria-current="page"{% endif %}><span><strong>Home</strong><small>Karibu Tanzania</small></span>{% include "tours/_icon.html" with name="arrow" %}</a></li>
+        {% for url, label, note, active in menu %}
+          <li><a href="{{ url }}" {% if active %}aria-current="page"{% endif %}><span><strong>{{ label }}</strong><small>{{ note }}</small></span>{% include "tours/_icon.html" with name="arrow" %}</a></li>
+        {% endfor %}
+      </ul>
+      <div class="drawer-foot">
+        <a class="btn btn-wa btn-block" href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">{% include "tours/_icon.html" with name="whatsapp" %} Book on WhatsApp</a>
+        <div class="drawer-contacts">
+          <a href="tel:+{{ WHATSAPP_NUMBER }}">{% include "tours/_icon.html" with name="phone" %} Call</a>
+          <a href="mailto:{{ CONTACT_EMAIL }}">{% include "tours/_icon.html" with name="mail" %} Email</a>
+          <a href="{{ FACEBOOK_URL }}" target="_blank" rel="noopener">{% include "tours/_icon.html" with name="facebook" %} Facebook</a>
+        </div>
+        <p>{{ LOCATION }} · {{ CONTACT_PHONE }}</p>
+      </div>
+    </div>
+  </div>
 
   <main id="main">{% block content %}{% endblock %}</main>
 
   <footer class="site-footer">
+    <div class="container">
+      <p class="footer-word" aria-hidden="true">Kili Wild</p>
+    </div>
     <div class="container footer-grid">
       <div class="footer-brand">
-        <img src="{% static 'img/logo.png' %}" alt="{{ SITE_NAME }} logo" width="96" height="96" loading="lazy">
+        <img src="{% static 'img/logo.png' %}" alt="{{ SITE_NAME }} logo" width="88" height="88" loading="lazy">
         <p>Unforgettable hikes, safaris & cultural journeys across Tanzania – from the Kilimanjaro summit to the Serengeti, Ngorongoro Crater & Lake Manyara.</p>
       </div>
       <div>
@@ -62,10 +94,11 @@
         </ul>
       </div>
       <div>
-        <h3>Company</h3>
+        <h3>Explore</h3>
         <ul>
-          <li><a href="{% url 'tours:about' %}">About us</a></li>
+          <li><a href="{% url 'tours:destinations' %}">Destinations</a></li>
           <li><a href="{% url 'tours:gallery' %}">Gallery</a></li>
+          <li><a href="{% url 'tours:about' %}">About us</a></li>
           <li><a href="{% url 'tours:contact' %}">Contact</a></li>
         </ul>
       </div>
@@ -89,7 +122,7 @@
     {% include "tours/_icon.html" with name="whatsapp" %}
   </a>
 
+  {% block after_footer %}{% endblock %}
   <script src="{% static 'js/site.js' %}" defer></script>
-  {% block scripts %}{% endblock %}
 </body>
 </html>

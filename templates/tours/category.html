@@ -3,22 +3,32 @@
 {% block description %}{{ info.tagline }} {{ info.intro }}{% endblock %}
 {% block og_title %}{{ info.title|default:category_label }} – {{ SITE_NAME }}{% endblock %}
 {% block content %}
-<section class="page-hero" {% with packages|first as top %}{% if top.image %}style="--hero: url('{{ top.image.url }}')"{% endif %}{% endwith %}>
-  <div class="container">
-    <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'tours:home' %}">Home</a> <span>/</span> {{ category_label }}</nav>
-    <h1>{{ info.title|default:category_label }}</h1>
-    {% if info.tagline %}<p class="lead">{{ info.tagline }}</p>{% endif %}
-  </div>
-</section>
+{% include "tours/_page_hero.html" with image=hero_image title=info.title|default:category_label lead=info.tagline crumb=category_label eyebrow=category_label %}
 
 <section class="section">
   <div class="container">
-    {% if info.intro %}<p class="intro">{{ info.intro }}</p>{% endif %}
+    {% if info.intro %}<p class="intro reveal" style="margin-bottom:48px">{{ info.intro }}</p>{% endif %}
     <div class="grid grid-3">
       {% for p in packages %}{% include "tours/_card.html" %}{% endfor %}
     </div>
   </div>
 </section>
+
+{% if faqs %}
+<section class="section band-paper">
+  <div class="container faq-wrap">
+    <div class="reveal">
+      <p class="eyebrow">Good to know</p>
+      <h2>Questions we get asked a lot</h2>
+      <p class="muted">Can't find your answer? Message us on WhatsApp – a real person from our team will reply.</p>
+      <a class="btn btn-wa" href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">{% include "tours/_icon.html" with name="whatsapp" %} Ask a question</a>
+    </div>
+    <div class="faq reveal">
+      {% for f in faqs %}<details {% if forloop.first %}open{% endif %}><summary>{{ f.question }}</summary><p>{{ f.answer }}</p></details>{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
 
 {% include "tours/_cta.html" %}
 {% endblock %}

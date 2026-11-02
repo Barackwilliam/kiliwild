@@ -1,0 +1,83 @@
+{% extends "base.html" %}{% load static %}
+{% block title %}{{ dest.name }} – {{ dest.tagline }} | {{ SITE_NAME }}{% endblock %}
+{% block description %}{{ dest.intro|truncatechars:155 }}{% endblock %}
+{% block og_title %}{{ dest.name }} – {{ SITE_NAME }}{% endblock %}
+{% block og_image %}{% if dest.image %}{{ dest.image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+{% block content %}
+<section class="page-hero page-hero-tall">
+  {% if dest.image %}<div class="page-hero-bg" aria-hidden="true"><img src="{{ dest.image.url }}" alt="" fetchpriority="high" decoding="async"></div>{% endif %}
+  <div class="container">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'tours:home' %}">Home</a> <span>/</span> <a href="{% url 'tours:destinations' %}">Destinations</a> <span>/</span> {{ dest.name }}</nav>
+    <span class="karibu">{{ dest.swahili }}</span>
+    <h1>{{ dest.name }}</h1>
+    <p class="lead">{{ dest.tagline }}</p>
+    <div class="hero-chips">
+      <span>{% include "tours/_icon.html" with name="compass" %} {{ dest.get_kind_display }}</span>
+      {% if dest.size %}<span>{% include "tours/_icon.html" with name="mountain" %} {{ dest.size }}</span>{% endif %}
+      {% if dest.known_for %}<span>{% include "tours/_icon.html" with name="target" %} {{ dest.known_for }}</span>{% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container dest-layout">
+    <div>
+      <p class="summary reveal">{{ dest.intro }}</p>
+      <div class="prose reveal">{% for para in dest.body_paragraphs %}<p>{{ para }}</p>{% endfor %}</div>
+
+      {% if dest.highlights_list %}
+      <div class="block" style="margin-top:48px">
+        <div class="block-head"><h2>Highlights</h2></div>
+        <ol class="highlights">{% for h in dest.highlights_list %}<li class="reveal"><span class="num">{{ forloop.counter|stringformat:"02d" }}</span><span>{{ h }}</span></li>{% endfor %}</ol>
+      </div>
+      {% endif %}
+
+      {% if dest.wildlife_list %}
+      <div class="block">
+        <div class="block-head"><h2>{% if dest.kind == "mountain" %}What you'll see{% else %}Wildlife{% endif %}</h2></div>
+        <ul class="tags reveal">{% for w in dest.wildlife_list %}<li>{{ w }}</li>{% endfor %}</ul>
+      </div>
+      {% endif %}
+    </div>
+
+    <aside>
+      <div class="fact-card reveal">
+        <dl>
+          {% if dest.size %}<div><dt>Size / height</dt><dd>{{ dest.size }}</dd></div>{% endif %}
+          {% if dest.known_for %}<div><dt>Known for</dt><dd>{{ dest.known_for }}</dd></div>{% endif %}
+          {% if dest.best_time %}<div><dt>Best time to visit</dt><dd>{{ dest.best_time }}</dd></div>{% endif %}
+        </dl>
+      </div>
+      <a class="btn btn-wa btn-block" href="https://wa.me/{{ WHATSAPP_NUMBER }}?text={{ 'Hello Kili Wild Adventure! I would like to visit '|urlencode }}{{ dest.name|urlencode }}" target="_blank" rel="noopener">{% include "tours/_icon.html" with name="whatsapp" %} Plan a trip here</a>
+    </aside>
+  </div>
+</section>
+
+{% if packages %}
+<section class="section section-tight">
+  <div class="container">
+    <div class="section-head reveal"><div><p class="eyebrow">Trips</p><h2>Our trips to {{ dest.name }}</h2></div></div>
+    <div class="grid grid-3">{% for p in packages %}{% include "tours/_card.html" %}{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
+
+{% if others %}
+<section class="section band-paper">
+  <div class="container">
+    <div class="section-head reveal"><div><p class="eyebrow">Keep exploring</p><h2>More destinations</h2></div>
+      <a class="link-arrow" href="{% url 'tours:destinations' %}">All destinations {% include "tours/_icon.html" with name="arrow" %}</a></div>
+    <div class="grid grid-4">
+      {% for d in others %}
+      <a class="dest reveal" href="{{ d.get_absolute_url }}">
+        {% if d.image %}<img src="{{ d.image.url }}" alt="" loading="lazy" decoding="async">{% endif %}
+        <div class="dest-body"><span class="hand">{{ d.swahili }}</span><h3>{{ d.name }}</h3></div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% include "tours/_cta.html" %}
+{% endblock %}

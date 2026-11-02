@@ -1,11 +1,16 @@
-{% load tours_extras %}<section class="cta">
-  <div class="container cta-inner">
+{% load static %}<section class="cta">
+  <div class="cta-bg" aria-hidden="true"><img src="{% static 'img/slides/kilimanjaro.jpg' %}" alt="" loading="lazy" decoding="async"></div>
+  <div class="container cta-inner reveal">
     <div>
+      <p class="eyebrow eyebrow-light">Start planning</p>
       <h2>{{ cta_title|default:"Ready for your Tanzania adventure?" }}</h2>
-      <p>Tell us your dates and group size on WhatsApp – we reply fast and plan every detail with you.</p>
+      <p>Tell us your dates and group size on WhatsApp – we reply fast and plan every detail with you, from airport pickup to the summit.</p>
     </div>
-    <a class="btn btn-wa btn-lg" href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">
-      {% include "tours/_icon.html" with name="whatsapp" %} Chat on WhatsApp
-    </a>
+    <div class="cta-actions">
+      <a class="btn btn-wa btn-lg" href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">
+        {% include "tours/_icon.html" with name="whatsapp" %} Chat on WhatsApp
+      </a>
+      <small>{{ CONTACT_PHONE }} · {{ CONTACT_EMAIL }}</small>
+    </div>
   </div>
 </section>

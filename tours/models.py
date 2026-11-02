@@ -43,7 +43,66 @@ CATEGORY_INFO = {
 }
 
 
+def lines(text):
+    return [line.strip() for line in (text or "").splitlines() if line.strip()]
+
+
+def paragraphs(text):
+    return [p.strip() for p in re.split(r"\n\s*\n", text or "") if p.strip()]
+
+
+class Destination(models.Model):
+    class Kind(models.TextChoices):
+        MOUNTAIN = "mountain", "Mountain"
+        PARK = "park", "National park"
+        TOWN = "town", "Town"
+
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=120, unique=True)
+    swahili = models.CharField(max_length=100, blank=True, help_text="Swahili name or meaning")
+    kind = models.CharField(max_length=20, choices=Kind.choices, default=Kind.PARK)
+    tagline = models.CharField(max_length=180)
+    intro = models.TextField(help_text="Opening paragraph.")
+    body = models.TextField(blank=True, help_text="More paragraphs, separated by an empty line.")
+    highlights = models.TextField(blank=True, help_text="One highlight per line.")
+    wildlife = models.TextField(blank=True, help_text="Animals / things to see, one per line.")
+    best_time = models.CharField(max_length=200, blank=True)
+    size = models.CharField(max_length=100, blank=True, help_text='e.g. "14,763 km²" or "5,895m"')
+    known_for = models.CharField(max_length=160, blank=True)
+    image = models.ImageField(upload_to="destinations/", blank=True)
+    map_key = models.CharField(max_length=40, blank=True, help_text="Key of the pin on the home-page map.")
+    sort_order = models.PositiveSmallIntegerField(default=100)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["sort_order", "name"]
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("tours:destination", args=[self.slug])
+
+    @property
+    def body_paragraphs(self):
+        return paragraphs(self.body)
+
+    @property
+    def highlights_list(self):
+        return lines(self.highlights)
+
+    @property
+    def wildlife_list(self):
+        return lines(self.wildlife)
+
+
 class Package(models.Model):
+    class Difficulty(models.TextChoices):
+        EASY = "easy", "Easy"
+        MODERATE = "moderate", "Moderate"
+        CHALLENGING = "challenging", "Challenging"
+        DEMANDING = "demanding", "Demanding"
+
     category = models.CharField(max_length=20, choices=Category.choices, db_index=True)
     title = models.CharField(max_length=120)
     slug = models.SlugField(max_length=140, unique=True)
@@ -52,6 +111,11 @@ class Package(models.Model):
     duration_days = models.PositiveSmallIntegerField()
     summary = models.TextField(help_text="One or two sentences shown on cards and at the top of the page.")
     why = models.TextField(blank=True, help_text="Longer 'Why this trip' text on the package page.")
+    overview = models.TextField(blank=True, help_text="Full description – paragraphs separated by an empty line.")
+    highlights = models.TextField(blank=True, help_text="One highlight per line.")
+    difficulty = models.CharField(max_length=20, choices=Difficulty.choices, blank=True)
+    best_time = models.CharField(max_length=200, blank=True)
+    destinations = models.ManyToManyField(Destination, blank=True, related_name="packages")
     max_altitude = models.CharField(max_length=60, blank=True)
     accommodation = models.CharField(max_length=80, blank=True)
     best_for = models.CharField(max_length=160, blank=True)
@@ -83,7 +147,20 @@ class Package(models.Model):
 
     @property
     def extra_notes_list(self):
-        return [line.strip() for line in self.extra_notes.splitlines() if line.strip()]
+        return lines(self.extra_notes)
+
+    @property
+    def overview_paragraphs(self):
+        return paragraphs(self.overview)
+
+    @property
+    def highlights_list(self):
+        return lines(self.highlights)
+
+    @property
+    def difficulty_level(self):
+        """1–4 for the difficulty meter."""
+        return {"easy": 1, "moderate": 2, "challenging": 3, "demanding": 4}.get(self.difficulty, 0)
 
 
 class PriceTier(models.Model):
@@ -115,6 +192,10 @@ class ItineraryDay(models.Model):
     day_label = models.CharField(max_length=20, help_text='e.g. "Day 1" or "Day 2–3"')
     title = models.CharField(max_length=160)
     description = models.TextField(blank=True)
+    elevation = models.PositiveIntegerField(null=True, blank=True, help_text="Metres – where you sleep (or the summit)")
+    distance = models.CharField(max_length=40, blank=True, help_text='e.g. "11 km"')
+    hike_time = models.CharField(max_length=40, blank=True, help_text='e.g. "5–7 hours"')
+    habitat = models.CharField(max_length=60, blank=True, help_text='e.g. "Rainforest" or "Game drive"')
     sort_order = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
@@ -136,6 +217,21 @@ class Inclusion(models.Model):
 
     def __str__(self):
         return self.text
+
+
+class FAQ(models.Model):
+    category = models.CharField(max_length=20, choices=Category.choices, db_index=True)
+    question = models.CharField(max_length=200)
+    answer = models.TextField()
+    sort_order = models.PositiveSmallIntegerField(default=100)
+
+    class Meta:
+        ordering = ["category", "sort_order", "id"]
+        verbose_name = "FAQ"
+        verbose_name_plural = "FAQs"
+
+    def __str__(self):
+        return self.question
 
 
 class GalleryPhoto(models.Model):

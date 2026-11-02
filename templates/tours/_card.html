@@ -1,20 +1,20 @@
-{% load static tours_extras %}<article class="card">
-  <a class="card-media" href="{{ p.get_absolute_url }}" tabindex="-1" aria-hidden="true">
-    <img src="{% if p.image %}{{ p.image.url }}{% else %}{% static 'img/hero.jpg' %}{% endif %}" alt="" loading="lazy">
+{% load static tours_extras %}<a class="card reveal" href="{{ p.get_absolute_url }}">
+  <span class="card-media"><img src="{% if p.image %}{{ p.image.url }}{% else %}{% static 'img/hero.jpg' %}{% endif %}" alt="" loading="lazy" decoding="async"></span>
+  <span class="card-top">
     {% if p.badge %}<span class="badge">{{ p.badge }}</span>{% endif %}
     <span class="chip">{% include "tours/_icon.html" with name="clock" %} {{ p.duration_days }} days</span>
-  </a>
-  <div class="card-body">
-    <p class="eyebrow">{{ p.category_label }}</p>
-    <h3><a href="{{ p.get_absolute_url }}">{{ p.title }}</a></h3>
-    {% if p.subtitle %}<p class="card-sub">{{ p.subtitle }}</p>{% endif %}
-    <div class="card-foot">
+  </span>
+  <span class="card-body">
+    <span class="eyebrow">{{ p.category_label }}</span>
+    <h3>{{ p.title }}</h3>
+    {% if p.subtitle %}<span class="card-sub" style="display:block">{{ p.subtitle }}</span>{% endif %}
+    <span class="card-foot">
       {% if p.price_from %}
-        <p class="price"><span>From</span> <strong>{{ p.price_from|usd }}</strong> <small>{{ p.price_note }}</small></p>
+        <span class="price"><span>From</span><strong>{{ p.price_from|usd }}</strong><small>{{ p.price_note }}</small></span>
       {% else %}
-        <p class="price price-ask"><strong>Price on request</strong> <small>Ask us on WhatsApp</small></p>
+        <span class="price price-ask"><span>Price</span><strong>On request</strong><small>Ask us on WhatsApp</small></span>
       {% endif %}
-      <a class="link-arrow" href="{{ p.get_absolute_url }}">Details {% include "tours/_icon.html" with name="arrow" %}</a>
-    </div>
-  </div>
-</article>
+      <span class="card-go" aria-hidden="true">{% include "tours/_icon.html" with name="arrow" %}</span>
+    </span>
+  </span>
+</a>

@@ -4,56 +4,129 @@
 {% block og_title %}{{ package.title }} – {{ SITE_NAME }}{% endblock %}
 {% block og_description %}{{ package.summary }}{% endblock %}
 {% block og_image %}{% if package.image %}{{ package.image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+{% block body_class %}has-book-bar{% endblock %}
 {% block content %}
-<section class="page-hero page-hero-tall" {% if package.image %}style="--hero: url('{{ package.image.url }}')"{% endif %}>
+<section class="page-hero page-hero-tall">
+  {% if package.image %}<div class="page-hero-bg" aria-hidden="true"><img src="{{ package.image.url }}" alt="" fetchpriority="high" decoding="async"></div>{% endif %}
   <div class="container">
     <nav class="crumbs" aria-label="Breadcrumb">
       <a href="{% url 'tours:home' %}">Home</a> <span>/</span>
       <a href="{% url 'tours:category' package.category %}">{{ package.category_label }}</a> <span>/</span>
       {{ package.title }}
     </nav>
-    {% if package.badge %}<span class="badge badge-static">{{ package.badge }}</span>{% endif %}
+    {% if package.badge %}<span class="badge" style="margin-bottom:18px">{{ package.badge }}</span>{% endif %}
     <h1>{{ package.title }}</h1>
     {% if package.subtitle %}<p class="lead">{{ package.subtitle }}</p>{% endif %}
+    <div class="hero-chips">
+      <span>{% include "tours/_icon.html" with name="clock" %} {{ package.duration_days }} days</span>
+      {% if package.max_altitude %}<span>{% include "tours/_icon.html" with name="mountain" %} {{ package.max_altitude }}</span>{% endif %}
+      {% if package.difficulty %}<span>{% include "tours/_icon.html" with name="target" %} {{ package.get_difficulty_display }}</span>{% endif %}
+      {% if package.price_from %}<span>{% include "tours/_icon.html" with name="tag" %} From {{ package.price_from|usd }}</span>{% endif %}
+    </div>
   </div>
 </section>
 
+<nav class="subnav" aria-label="On this page" data-subnav>
+  <ul class="container">
+    <li><a href="#overview">Overview</a></li>
+    {% if days %}<li><a href="#itinerary">Itinerary</a></li>{% endif %}
+    {% if tiers %}<li><a href="#prices">Prices</a></li>{% endif %}
+    {% if included or excluded %}<li><a href="#included">What's included</a></li>{% endif %}
+    {% if destinations %}<li><a href="#places">Places</a></li>{% endif %}
+    {% if faqs %}<li><a href="#faq">FAQ</a></li>{% endif %}
+    <li><a href="#book">Book</a></li>
+  </ul>
+</nav>
+
 <div class="container detail-layout">
   <div class="detail-main">
-    <ul class="facts">
-      <li>{% include "tours/_icon.html" with name="clock" %}<span><small>Duration</small>{{ package.duration_days }} days</span></li>
-      {% if package.max_altitude %}<li>{% include "tours/_icon.html" with name="mountain" %}<span><small>Highest point</small>{{ package.max_altitude }}</span></li>{% endif %}
-      {% if package.accommodation %}<li>{% include "tours/_icon.html" with name="bed" %}<span><small>Sleeping</small>{{ package.accommodation }}</span></li>{% endif %}
-      {% if package.best_for %}<li>{% include "tours/_icon.html" with name="target" %}<span><small>Best for</small>{{ package.best_for }}</span></li>{% endif %}
-    </ul>
+    <section class="block" id="overview">
+      <ul class="facts reveal">
+        <li>{% include "tours/_icon.html" with name="clock" %}<span><small>Duration</small>{{ package.duration_days }} days</span></li>
+        {% if package.max_altitude %}<li>{% include "tours/_icon.html" with name="mountain" %}<span><small>Highest point</small>{{ package.max_altitude }}</span></li>{% endif %}
+        {% if package.accommodation %}<li>{% include "tours/_icon.html" with name="bed" %}<span><small>Sleeping</small>{{ package.accommodation }}</span></li>{% endif %}
+        {% if package.difficulty %}<li>{% include "tours/_icon.html" with name="target" %}<span><small>Difficulty</small>{{ package.get_difficulty_display }}
+          <span class="meter" aria-hidden="true">{% for i in "1234" %}<i class="{% if forloop.counter <= package.difficulty_level %}on{% endif %}"></i>{% endfor %}</span></span></li>{% endif %}
+        {% if package.best_for %}<li>{% include "tours/_icon.html" with name="team" %}<span><small>Best for</small>{{ package.best_for }}</span></li>{% endif %}
+        {% if package.best_time %}<li>{% include "tours/_icon.html" with name="sun" %}<span><small>Best time</small>{{ package.best_time }}</span></li>{% endif %}
+      </ul>
 
-    <section class="block">
-      <p class="summary">{{ package.summary }}</p>
-      {% if package.why %}<p>{{ package.why }}</p>{% endif %}
+      <p class="summary reveal">{{ package.summary }}</p>
+      <div class="prose reveal">
+        {% for para in package.overview_paragraphs %}<p>{{ para }}</p>{% empty %}{% if package.why %}<p>{{ package.why }}</p>{% endif %}{% endfor %}
+      </div>
     </section>
 
-    {% if package.itinerary.all %}
+    {% if package.highlights_list %}
     <section class="block">
-      <h2>Itinerary</h2>
-      <ol class="timeline">
-        {% for d in package.itinerary.all %}
-        <li>
-          <span class="tl-day">{{ d.day_label }}</span>
-          <div>
-            <h3>{{ d.title }}</h3>
-            {% if d.description %}<p>{{ d.description }}</p>{% endif %}
-          </div>
-        </li>
-        {% endfor %}
+      <div class="block-head"><h2>Highlights</h2></div>
+      <ol class="highlights">
+        {% for h in package.highlights_list %}<li class="reveal"><span class="num">{{ forloop.counter|stringformat:"02d" }}</span><span>{{ h }}</span></li>{% endfor %}
       </ol>
+    </section>
+    {% endif %}
+
+    {% if days %}
+    <section class="block" id="itinerary">
+      <div class="block-head">
+        <h2>Day by day</h2>
+        <span class="muted">{{ days|length }} stage{{ days|length|pluralize }}{% if profile %} · distances and times are approximate{% endif %}</span>
+      </div>
+
+      {% if profile %}
+      <figure class="profile reveal" style="margin:0 0 22px" aria-label="Elevation profile">
+        <div class="profile-head"><h3>Elevation profile</h3><span>Where you sleep each night, in metres</span></div>
+        <svg viewBox="0 0 {{ profile.width }} {{ profile.height }}" role="img" aria-label="Elevation by day, highest point {{ profile.peak.elev }} metres">
+          <defs>
+            <linearGradient id="pfFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#d4a054" stop-opacity=".45"/>
+              <stop offset="100%" stop-color="#d4a054" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <g class="pf-grid">
+            {% for g in profile.grid %}<line x1="{{ profile.left }}" x2="{{ profile.right }}" y1="{{ g.y }}" y2="{{ g.y }}"/><text x="{{ profile.left|add:'-8' }}" y="{{ g.y }}" text-anchor="end" dominant-baseline="middle">{{ g.label }}</text>{% endfor %}
+          </g>
+          <path class="pf-area" d="{{ profile.area }}"/>
+          <polyline class="pf-line" points="{{ profile.line }}"/>
+          {% for p in profile.points %}
+            <circle class="{% if p == profile.peak %}pf-peak{% else %}pf-dot{% endif %}" cx="{{ p.x }}" cy="{{ p.y }}" r="{% if p == profile.peak %}7{% else %}5{% endif %}"/>
+            <text class="pf-day" x="{{ p.x }}" y="{{ profile.base|add:'20' }}" text-anchor="middle">{{ p.label }}</text>
+            {% if p != profile.peak %}<text class="pf-elev" x="{{ p.x }}" y="{{ p.y }}" dy="-12" text-anchor="middle">{{ p.elev }}</text>{% endif %}
+          {% endfor %}
+          <text class="pf-flag" x="{{ profile.peak.x }}" y="{{ profile.peak.y }}" dy="-16" text-anchor="middle">Summit {{ profile.peak.elev }}m</text>
+        </svg>
+      </figure>
+      {% endif %}
+
+      <div class="days">
+        {% for d in days %}
+        <details class="day reveal" {% if forloop.first %}open{% endif %}>
+          <summary>
+            <span class="day-label">{{ d.day_label }}</span>
+            <span><h3>{{ d.title }}</h3>{% if d.elevation or d.habitat %}<span class="day-elev">{% if d.elevation %}{{ d.elevation }}m{% endif %}{% if d.elevation and d.habitat %} · {% endif %}{{ d.habitat }}</span>{% endif %}</span>
+            <span class="day-plus" aria-hidden="true"></span>
+          </summary>
+          <div class="day-body">
+            {% if d.description %}<p>{{ d.description }}</p>{% endif %}
+            {% if d.elevation or d.distance or d.hike_time or d.habitat %}
+            <div class="day-stats">
+              {% if d.elevation %}<span>{% include "tours/_icon.html" with name="mountain" %} {{ d.elevation }}m</span>{% endif %}
+              {% if d.distance %}<span>{% include "tours/_icon.html" with name="route" %} {{ d.distance }}</span>{% endif %}
+              {% if d.hike_time %}<span>{% include "tours/_icon.html" with name="clock" %} {{ d.hike_time }}</span>{% endif %}
+              {% if d.habitat %}<span>{% include "tours/_icon.html" with name="tree" %} {{ d.habitat }}</span>{% endif %}
+            </div>
+            {% endif %}
+          </div>
+        </details>
+        {% endfor %}
+      </div>
     </section>
     {% endif %}
 
     {% if tiers %}
     <section class="block" id="prices">
-      <h2>Group prices</h2>
-      <p class="muted">Price per person in US dollars. The bigger the group, the better the price.</p>
-      <table class="price-table">
+      <div class="block-head"><h2>Group prices</h2><span class="muted">USD per person</span></div>
+      <table class="price-table reveal">
         <thead><tr><th scope="col">Group size</th><th scope="col">Per person</th></tr></thead>
         <tbody>
           {% for t in tiers %}
@@ -68,76 +141,87 @@
     {% endif %}
 
     {% if included or excluded %}
-    <section class="block">
-      <h2>What's included</h2>
+    <section class="block" id="included">
+      <div class="block-head"><h2>What's included</h2></div>
       <div class="incl-grid">
         {% if included %}
-        <ul class="incl incl-yes">
-          {% for i in included %}<li>{% include "tours/_icon.html" with name="check" %}<span>{{ i.text }}</span></li>{% endfor %}
-        </ul>
-        {% endif %}
-        {% if excluded %}
-        <div>
-          <h3 class="incl-title">Not included</h3>
-          <ul class="incl incl-no">
-            {% for i in excluded %}<li>{% include "tours/_icon.html" with name="x" %}<span>{{ i.text }}</span></li>{% endfor %}
-          </ul>
+        <div class="incl-card reveal">
+          <h3>Included in the price</h3>
+          <ul class="incl incl-yes">{% for i in included %}<li>{% include "tours/_icon.html" with name="check" %}<span>{{ i.text }}</span></li>{% endfor %}</ul>
         </div>
         {% endif %}
+        {% if excluded %}
+        <div class="incl-card reveal">
+          <h3>Not included</h3>
+          <ul class="incl incl-no">{% for i in excluded %}<li>{% include "tours/_icon.html" with name="x" %}<span>{{ i.text }}</span></li>{% endfor %}</ul>
+        </div>
+        {% endif %}
+      </div>
+      {% if package.tips_note or package.extra_notes_list %}
+      <div class="note reveal" style="margin-top:20px">
+        {% include "tours/_icon.html" with name="info" %}
+        <div>
+          <h3>Good to know</h3>
+          <ul>
+            {% if package.tips_note %}<li>{{ package.tips_note }}</li>{% endif %}
+            {% for line in package.extra_notes_list %}<li>{{ line }}</li>{% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endif %}
+    </section>
+    {% endif %}
+
+    {% if destinations %}
+    <section class="block" id="places">
+      <div class="block-head"><h2>Places on this trip</h2></div>
+      <div class="dest-links">
+        {% for d in destinations %}
+        <a class="dest-link reveal" href="{{ d.get_absolute_url }}">
+          {% if d.image %}<img src="{{ d.image.url }}" alt="" loading="lazy" decoding="async">{% endif %}
+          <span><strong>{{ d.name }}</strong><small>{{ d.known_for|default:d.tagline }}</small></span>
+        </a>
+        {% endfor %}
       </div>
     </section>
     {% endif %}
 
-    {% if package.tips_note or package.extra_notes_list %}
-    <section class="block note">
-      {% include "tours/_icon.html" with name="info" %}
-      <div>
-        <h3>Good to know</h3>
-        <ul>
-          {% if package.tips_note %}<li>{{ package.tips_note }}</li>{% endif %}
-          {% for line in package.extra_notes_list %}<li>{{ line }}</li>{% endfor %}
-        </ul>
+    {% if faqs %}
+    <section class="block" id="faq">
+      <div class="block-head"><h2>Questions & answers</h2></div>
+      <div class="faq">
+        {% for f in faqs %}<details><summary>{{ f.question }}</summary><p>{{ f.answer }}</p></details>{% endfor %}
       </div>
     </section>
     {% endif %}
   </div>
 
-  <aside class="detail-side">
-    <form class="book-card" data-book-form data-package="{{ package.title }}" data-number="{{ WHATSAPP_NUMBER }}"
-          action="https://wa.me/{{ WHATSAPP_NUMBER }}" method="get" target="_blank">
-      <div class="book-price">
-        {% if package.price_from %}
-          <span>From</span> <strong>{{ package.price_from|usd }}</strong>
-          <small>{{ package.price_note }}</small>
-        {% else %}
-          <strong>Price on request</strong><small>{{ package.price_note|default:"Ask us on WhatsApp" }}</small>
-        {% endif %}
-      </div>
-      <h2>Book this trip</h2>
-      <label>Your name <input type="text" name="name" autocomplete="name" required></label>
-      <div class="row-2">
-        <label>Travel date <input type="date" name="date"></label>
-        <label>People <input type="number" name="people" min="1" max="40" value="2" data-people></label>
-      </div>
-      <p class="estimate" data-estimate hidden></p>
-      <label>Message <span class="optional">(optional)</span>
-        <textarea name="message" rows="3" placeholder="Questions, hotel, gear rental…"></textarea>
-      </label>
-      <input type="hidden" name="text" value="Hello Kili Wild Adventure! I'd like to book: {{ package.title }}">
-      <button class="btn btn-wa btn-block" type="submit">{% include "tours/_icon.html" with name="whatsapp" %} Send on WhatsApp</button>
-      <p class="book-small">Opens WhatsApp with your details filled in. Booking goes straight to our team on {{ CONTACT_PHONE }}.</p>
-    </form>
+  <aside class="detail-side" id="book">
+    {% include "tours/_book_form.html" %}
   </aside>
 </div>
 
 {% if related %}
 <section class="section section-tight">
   <div class="container">
-    <h2 class="related-title">More {{ package.category_label }} trips</h2>
+    <div class="section-head reveal"><div><p class="eyebrow">You may also like</p><h2>More {{ package.category_label }} trips</h2></div></div>
     <div class="grid grid-3">
       {% for p in related %}{% include "tours/_card.html" %}{% endfor %}
     </div>
   </div>
 </section>
 {% endif %}
+
+{% include "tours/_cta.html" %}
+{% endblock %}
+
+{% block after_footer %}
+<div class="book-bar" data-book-bar>
+  {% if package.price_from %}
+    <span class="price"><span>From</span><strong>{{ package.price_from|usd }}</strong><small>{{ package.price_note }}</small></span>
+  {% else %}
+    <span class="price"><span>Price</span><strong>On request</strong></span>
+  {% endif %}
+  <a class="btn btn-wa" href="#book">{% include "tours/_icon.html" with name="whatsapp" %} Book now</a>
+</div>
 {% endblock %}

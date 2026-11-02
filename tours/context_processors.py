@@ -1,8 +1,24 @@
 from urllib.parse import quote
 
 from django.conf import settings
+from django.urls import reverse
 
 from .models import Category, Package
+
+
+NAV_NOTES = {
+    "kilimanjaro": "Four routes to Uhuru Peak",
+    "mount-meru": "Tanzania's second-highest peak",
+    "safari": "Serengeti, Ngorongoro & more",
+    "combo": "Two mountains, one trip",
+    "day-trips": "Short adventures",
+}
+EXTRA_PAGES = [
+    ("tours:destinations", "Destinations", "Parks, mountains & towns"),
+    ("tours:gallery", "Gallery", "Photos from the trail"),
+    ("tours:about", "About", "Our local team"),
+    ("tours:contact", "Contact", "Plan your trip with us"),
+]
 
 
 def whatsapp_url(message=""):
@@ -13,6 +29,11 @@ def whatsapp_url(message=""):
 def site(request):
     used = set(Package.objects.filter(is_active=True).values_list("category", flat=True).distinct())
     nav = [(c.value, c.label) for c in Category if c.value in used]
+    path = request.path
+    menu = [(reverse("tours:category", args=[slug]), label, NAV_NOTES.get(slug, ""), f"/tours/{slug}/" in path)
+            for slug, label in nav]
+    menu += [(reverse(name), label, note, path.startswith(reverse(name)))
+             for name, label, note in EXTRA_PAGES]
     return {
         "SITE_NAME": settings.SITE_NAME,
         "CONTACT_PHONE": settings.CONTACT_PHONE,
@@ -23,4 +44,5 @@ def site(request):
         "WHATSAPP_NUMBER": settings.WHATSAPP_NUMBER,
         "WHATSAPP_URL": whatsapp_url("Hello Kili Wild Adventure! I'd like to plan a trip."),
         "nav_categories": nav,
+        "menu": menu,
     }

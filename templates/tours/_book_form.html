@@ -1,0 +1,28 @@
+{% load tours_extras %}<form class="book-card" data-book-form data-package="{{ package.title }}" data-number="{{ WHATSAPP_NUMBER }}"
+      action="https://wa.me/{{ WHATSAPP_NUMBER }}" method="get" target="_blank">
+  <div class="book-price">
+    {% if package.price_from %}
+      <span>From</span><strong>{{ package.price_from|usd }}</strong><small>{{ package.price_note }}</small>
+    {% else %}
+      <span>Price</span><strong>On request</strong><small>{{ package.price_note|default:"Ask us on WhatsApp" }}</small>
+    {% endif %}
+  </div>
+  <h2>Book this trip</h2>
+  <label>Your name <input type="text" name="name" autocomplete="name" required></label>
+  <div class="row-2">
+    <label>Travel date <input type="date" name="date"></label>
+    <label>People <input type="number" name="people" min="1" max="40" value="2" inputmode="numeric"></label>
+  </div>
+  <p class="estimate" data-estimate hidden></p>
+  <label>Message <span class="optional">(optional)</span>
+    <textarea name="message" rows="3" placeholder="Questions, hotel, gear rental…"></textarea>
+  </label>
+  <input type="hidden" name="text" value="Hello Kili Wild Adventure! I'd like to book: {{ package.title }}">
+  <button class="btn btn-wa btn-block btn-lg" type="submit">{% include "tours/_icon.html" with name="whatsapp" %} Send on WhatsApp</button>
+  <p class="book-small">Opens WhatsApp with your details filled in. No payment now – we confirm everything with you first.</p>
+  <div class="book-trust">
+    <span>{% include "tours/_icon.html" with name="check" %} Park fees included</span>
+    <span>{% include "tours/_icon.html" with name="check" %} Airport pickup included</span>
+    <span>{% include "tours/_icon.html" with name="check" %} 100% local, licensed crew</span>
+  </div>
+</form>

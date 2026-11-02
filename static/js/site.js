@@ -1,25 +1,102 @@
 (function () {
   "use strict";
+  var root = document.documentElement;
+  var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // ---- mobile menu
-  var toggle = document.querySelector("[data-nav-toggle]");
-  var nav = document.querySelector("[data-nav]");
-  if (toggle && nav) {
-    toggle.addEventListener("click", function () {
-      var open = nav.classList.toggle("is-open");
-      toggle.setAttribute("aria-expanded", open ? "true" : "false");
-    });
+  // ---- header: transparent over the hero, solid once you scroll
+  var ticking = false;
+  function onScroll() {
+    root.classList.toggle("is-scrolled", window.scrollY > 40);
+    ticking = false;
+  }
+  window.addEventListener("scroll", function () {
+    if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
+  }, { passive: true });
+  onScroll();
+
+  // ---- mobile sidebar
+  var drawer = document.querySelector("[data-drawer]");
+  var openBtn = document.querySelector("[data-drawer-open]");
+  if (drawer && openBtn) {
+    var panel = drawer.querySelector(".drawer-panel");
+    var lastFocus = null;
+    var open = function () {
+      lastFocus = document.activeElement;
+      root.classList.add("drawer-open");
+      drawer.setAttribute("aria-hidden", "false");
+      openBtn.setAttribute("aria-expanded", "true");
+      setTimeout(function () { var f = drawer.querySelector(".drawer-close"); if (f) f.focus(); }, 60);
+    };
+    var close = function () {
+      root.classList.remove("drawer-open");
+      drawer.setAttribute("aria-hidden", "true");
+      openBtn.setAttribute("aria-expanded", "false");
+      if (lastFocus) lastFocus.focus();
+    };
+    openBtn.addEventListener("click", open);
+    drawer.querySelectorAll("[data-drawer-close]").forEach(function (b) { b.addEventListener("click", close); });
+    drawer.querySelectorAll(".drawer-nav a").forEach(function (a) { a.addEventListener("click", close); });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && nav.classList.contains("is-open")) {
-        nav.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
+      if (!root.classList.contains("drawer-open")) return;
+      if (e.key === "Escape") close();
+      if (e.key === "Tab") {                                   // keep focus inside the sidebar
+        var items = panel.querySelectorAll("a, button");
+        var first = items[0], last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
       }
+    });
+    var tx = null;                                            // swipe right to close
+    panel.addEventListener("touchstart", function (e) { tx = e.touches[0].clientX; }, { passive: true });
+    panel.addEventListener("touchend", function (e) {
+      if (tx !== null && e.changedTouches[0].clientX - tx > 70) close();
+      tx = null;
     });
   }
 
-  // ---- booking forms -> WhatsApp message
-  var money = function (n) { return "$" + Number(n).toLocaleString("en-US"); };
+  // ---- reveal on scroll
+  var reveals = document.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window && !still) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add("is-in"); io.unobserve(en.target); }
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    reveals.forEach(function (el) { io.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add("is-in"); });
+  }
 
+  // ---- package page: highlight the current section in the sub-menu, show the mobile booking bar
+  var subnav = document.querySelector("[data-subnav]");
+  if (subnav && "IntersectionObserver" in window) {
+    var links = {};
+    subnav.querySelectorAll("a").forEach(function (a) { links[a.getAttribute("href").slice(1)] = a; });
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        Object.keys(links).forEach(function (k) { links[k].classList.toggle("is-active", k === en.target.id); });
+        var a = links[en.target.id];
+        if (a && a.scrollIntoView && subnav.scrollWidth > subnav.clientWidth) a.scrollIntoView({ block: "nearest", inline: "center" });
+      });
+    }, { rootMargin: "-35% 0px -60% 0px" });
+    Object.keys(links).forEach(function (id) { var s = document.getElementById(id); if (s) spy.observe(s); });
+  }
+  var bar = document.querySelector("[data-book-bar]");
+  var book = document.getElementById("book");
+  if (bar && book && "IntersectionObserver" in window) {
+    var heroGone = false, formVisible = false;
+    var update = function () { bar.classList.toggle("is-visible", heroGone && !formVisible); };
+    var hero = document.querySelector(".page-hero");
+    if (hero) new IntersectionObserver(function (e) { heroGone = !e[0].isIntersecting; update(); }).observe(hero);
+    new IntersectionObserver(function (e) { formVisible = e[0].isIntersecting; update(); }, { threshold: 0.15 }).observe(book);
+  }
+})();
+
+// ---- booking forms -> WhatsApp message
+(function () {
+  "use strict";
+  var money = function (n) { return "$" + Number(n).toLocaleString("en-US"); };
   document.querySelectorAll("[data-book-form]").forEach(function (form) {
     var people = form.querySelector("[name=people]");
     var estimate = form.querySelector("[data-estimate]");
@@ -64,13 +141,15 @@
       window.open(url, "_blank", "noopener");
     });
   });
+})();
 
-  // ---- gallery filters + lightbox
+// ---- gallery filters + lightbox
+(function () {
+  "use strict";
   var gallery = document.querySelector("[data-gallery]");
   if (!gallery) return;
   var figures = Array.prototype.slice.call(gallery.querySelectorAll("figure"));
   var filters = document.querySelector("[data-filters]");
-
   if (filters) {
     filters.addEventListener("click", function (e) {
       var btn = e.target.closest("button[data-filter]");
@@ -80,49 +159,38 @@
       figures.forEach(function (f) { f.hidden = kind !== "all" && f.dataset.kind !== kind; });
     });
   }
-
   var box = document.querySelector("[data-lightbox]");
   if (!box || typeof box.showModal !== "function") return;
   var img = box.querySelector("[data-lb-img]");
   var cap = box.querySelector("[data-lb-cap]");
   var current = 0;
-
   function visible() { return figures.filter(function (f) { return !f.hidden; }); }
   function show(fig) {
     var pic = fig.querySelector("img");
-    img.src = pic.currentSrc || pic.src;
-    img.alt = pic.alt;
-    cap.textContent = pic.alt;
+    img.src = pic.currentSrc || pic.src; img.alt = pic.alt; cap.textContent = pic.alt;
     current = visible().indexOf(fig);
   }
   function step(d) {
-    var list = visible();
-    if (!list.length) return;
-    current = (current + d + list.length) % list.length;
-    show(list[current]);
+    var list = visible(); if (!list.length) return;
+    current = (current + d + list.length) % list.length; show(list[current]);
   }
-
   gallery.addEventListener("click", function (e) {
     var btn = e.target.closest("button[data-open]");
     if (!btn) return;
-    show(btn.closest("figure"));
-    box.showModal();
+    show(btn.closest("figure")); box.showModal();
   });
   box.querySelector("[data-lb-close]").addEventListener("click", function () { box.close(); });
   box.querySelector("[data-lb-prev]").addEventListener("click", function () { step(-1); });
   box.querySelector("[data-lb-next]").addEventListener("click", function () { step(1); });
   box.addEventListener("click", function (e) { if (e.target === box) box.close(); });
-  box.addEventListener("keydown", function (e) {
-    if (e.key === "ArrowLeft") step(-1);
-    if (e.key === "ArrowRight") step(1);
-  });
-  var startX = null;
-  box.addEventListener("touchstart", function (e) { startX = e.touches[0].clientX; }, { passive: true });
+  box.addEventListener("keydown", function (e) { if (e.key === "ArrowLeft") step(-1); if (e.key === "ArrowRight") step(1); });
+  var sx = null;
+  box.addEventListener("touchstart", function (e) { sx = e.touches[0].clientX; }, { passive: true });
   box.addEventListener("touchend", function (e) {
-    if (startX === null) return;
-    var dx = e.changedTouches[0].clientX - startX;
+    if (sx === null) return;
+    var dx = e.changedTouches[0].clientX - sx;
     if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
-    startX = null;
+    sx = null;
   });
 })();
 
@@ -137,20 +205,18 @@
   var MS = 6500, i = 0, timer = null;
   var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   root.style.setProperty("--slide-ms", MS + "ms");
-
   function go(n) {
     i = (n + slides.length) % slides.length;
     slides.forEach(function (s, k) { s.classList.toggle("is-active", k === i); });
     caps.forEach(function (c, k) { c.classList.toggle("is-active", k === i); });
     dots.forEach(function (d, k) {
-      d.classList.remove("is-active");
-      d.classList.toggle("is-done", k < i);
+      d.classList.remove("is-active"); d.classList.toggle("is-done", k < i);
       d.setAttribute("aria-selected", k === i ? "true" : "false");
     });
-    void root.offsetWidth;                                   // restart the progress-bar animation
-    dots[i] && dots[i].classList.add("is-active");
+    void root.offsetWidth;
+    if (dots[i]) dots[i].classList.add("is-active");
     var next = slides[(i + 1) % slides.length].querySelector("img");
-    if (next && next.loading === "lazy") next.loading = "eager"; // warm up the next photo
+    if (next && next.loading === "lazy") next.loading = "eager";
     schedule();
   }
   function schedule() {
@@ -269,6 +335,8 @@
     var link = el("[data-mc-link]");
     link.href = p.url;
     link.firstChild.textContent = p.cta + " ";
+    var more = el("[data-mc-more]");
+    if (more && p.more) { more.href = p.more; more.textContent = "Read the full story of " + p.name + " \u2192"; }
 
     placeBubble(p);
     typeOut(p.say);

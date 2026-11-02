@@ -6,7 +6,11 @@ the trip, name, date, group size and a price estimate.
 
 - **Database:** Supabase Postgres (`DATABASE_URL`), SQLite locally
 - **Photos:** Supabase Storage public bucket through the S3 API (`SUPABASE_S3_*`), local `media/` otherwise
-- **Admin:** `/admin/` – packages (with price tiers, itinerary, included/not included inline) and gallery
+- **Admin:** `/admin/` – packages (price tiers, day-by-day itinerary with elevation/distance/time, included/not
+  included), destinations, FAQs and gallery
+- **Pages:** home (slideshow, talking map), Kilimanjaro / Meru / Safari / Combo, package pages (elevation
+  profile, FAQ), 8 destination pages, gallery, about, contact
+- **Speed:** public pages are cached for 10 minutes in production; any admin edit clears the cache
 
 ## Run locally
 
@@ -32,7 +36,9 @@ python manage.py runserver
    uploads the package photos and the 82 gallery photos from `seed_photos/` into the bucket.
 
 `seed_kiliwild` can be run again safely: existing packages and photos are skipped. Use
-`--reset` to overwrite the packages with what's in `tours/seed_data.py` (this resets prices edited in admin).
+`--reset` to overwrite packages, destinations and FAQs with what's in `tours/seed_data.py` (this resets prices
+and text edited in admin). **If you seeded an older version, run `python manage.py seed_kiliwild --reset` once**
+to load the new descriptions, destinations and FAQs.
 
 ## Deploy (Render)
 
@@ -47,7 +53,8 @@ To check with the client:
 
 - **Rongai 7 days** has no price yet, so it shows "Price on request". Add price tiers in admin.
 - Itineraries for **Lemosho, Marangu, Rongai and Meru 3 days** use the standard route camps, because the
-  client only sent day-by-day plans for Machame and Meru 4 days.
+  client only sent day-by-day plans for Machame and Meru 4 days. Distances and hiking times on every route are
+  the usual published approximations.
 - **Lemosho and Rongai** use the Machame included/not-included list (camping routes).
 - **Day Trips:** the category exists but is hidden until a day-trip package is added in admin.
 

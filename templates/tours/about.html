@@ -2,43 +2,40 @@
 {% block title %}About us | {{ SITE_NAME }}{% endblock %}
 {% block description %}Kili Wild Adventure is a locally owned travel company in Moshi & Arusha, founded by {{ FOUNDER_NAME }}. Authentic, safe and affordable Kilimanjaro climbs and Tanzania safaris.{% endblock %}
 {% block content %}
-<section class="page-hero" style="--hero: url('{% static 'img/summit-team.jpg' %}')">
-  <div class="container">
-    <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'tours:home' %}">Home</a> <span>/</span> About</nav>
-    <h1>Your gateway to Tanzania's wild heart</h1>
-    <p class="lead">Welcome to Kili Wild Adventure.</p>
-  </div>
-</section>
+{% static 'img/summit-team.jpg' as hero %}
+{% include "tours/_page_hero.html" with image=hero title="Your gateway to Tanzania's wild heart" lead="A locally owned company from Moshi & Arusha, founded by people who grew up under Kilimanjaro." crumb="About" eyebrow="About us" %}
 
 <section class="section">
   <div class="container about-split">
-    <div>
+    <div class="reveal">
       <p class="eyebrow">Our story</p>
-      <h2>Locally owned, from Moshi & Arusha</h2>
+      <h2>Local, safe and fair – since day one</h2>
       <p>We are a locally owned travel company based in Moshi & Arusha, founded by <strong>{{ FOUNDER_NAME }}</strong>. We specialize in authentic, safe and affordable adventures across Tanzania: climbing Kilimanjaro and Mount Meru, safaris through the Serengeti, Ngorongoro Crater, Tarangire and Lake Manyara, and cultural journeys in between.</p>
       <p>Every guide, cook and porter on our team is local. That means people who know these mountains and parks like home – because they are home – and money that stays in the communities around them.</p>
-      <p>Let us make your dream trip unforgettable.</p>
+      <p>We keep our groups well looked after: emergency oxygen, a first aid kit and a pulse oximeter on every climb, licensed guides, clear prices with park fees included, and fair pay for our crew. And for every climber, we plant a tree.</p>
+      <p class="signature">— {{ FOUNDER_NAME }}, founder</p>
       <div class="about-actions">
         <a class="btn btn-wa" href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">{% include "tours/_icon.html" with name="whatsapp" %} Talk to us</a>
         <a class="btn btn-outline" href="{% url 'tours:category' 'kilimanjaro' %}">See our climbs</a>
       </div>
     </div>
-    <div class="about-photos">
-      <img src="{% static 'img/team-gate.jpg' %}" alt="A Kili Wild Adventure group at the park gate" loading="lazy">
-      <img src="{% static 'img/safari.jpg' %}" alt="Safari jeep at a waterhole with elephants" loading="lazy">
+    <div class="about-photos reveal">
+      <img src="{% static 'img/team-gate.jpg' %}" alt="A Kili Wild Adventure group at the park gate" loading="lazy" decoding="async">
+      <img src="{% static 'img/safari.jpg' %}" alt="Safari jeep at a waterhole with elephants" loading="lazy" decoding="async">
+      <span class="stamp">Karibu sana!<small>You are very welcome</small></span>
     </div>
   </div>
 </section>
 
 <section class="section band-forest">
   <div class="container">
-    <div class="section-head section-head-center">
+    <div class="section-head section-head-center reveal">
       <p class="eyebrow eyebrow-light">Why travel with us</p>
       <h2>What we promise every guest</h2>
     </div>
-    <div class="grid grid-4 why-grid">
+    <div class="grid grid-4">
       {% for icon, title, text in why_us %}
-      <div class="why">
+      <div class="why reveal">
         <span class="why-icon">{% include "tours/_icon.html" with name=icon %}</span>
         <h3>{{ title }}</h3>
         <p>{{ text }}</p>

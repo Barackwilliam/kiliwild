@@ -2,17 +2,12 @@
 {% block title %}Contact | {{ SITE_NAME }}{% endblock %}
 {% block description %}Book your Kilimanjaro climb or Tanzania safari with Kili Wild Adventure. WhatsApp {{ CONTACT_PHONE }} · {{ CONTACT_EMAIL }} · Moshi & Arusha.{% endblock %}
 {% block content %}
-<section class="page-hero" style="--hero: url('{% static 'img/hero.jpg' %}')">
-  <div class="container">
-    <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'tours:home' %}">Home</a> <span>/</span> Contact</nav>
-    <h1>Let's plan your adventure</h1>
-    <p class="lead">The fastest way to reach us is WhatsApp – we reply quickly.</p>
-  </div>
-</section>
+{% static 'img/hero.jpg' as hero %}
+{% include "tours/_page_hero.html" with image=hero title="Let's plan your adventure" lead="The fastest way to reach us is WhatsApp – a real person from our team replies quickly." eyebrow="Contact" %}
 
 <section class="section">
   <div class="container contact-layout">
-    <div class="contact-cards">
+    <div class="contact-cards reveal">
       <a class="contact-card contact-wa" href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">
         {% include "tours/_icon.html" with name="whatsapp" %}
         <span><small>WhatsApp & phone</small>{{ CONTACT_PHONE }}</span>
@@ -31,7 +26,7 @@
       </div>
     </div>
 
-    <form class="book-card" data-book-form data-number="{{ WHATSAPP_NUMBER }}"
+    <form class="book-card reveal" data-book-form data-number="{{ WHATSAPP_NUMBER }}"
           action="https://wa.me/{{ WHATSAPP_NUMBER }}" method="get" target="_blank">
       <h2>Send us your trip details</h2>
       <label>Your name <input type="text" name="name" autocomplete="name" required></label>
@@ -54,7 +49,7 @@
         <textarea name="message" rows="4" placeholder="Tell us what you have in mind…"></textarea>
       </label>
       <input type="hidden" name="text" value="Hello Kili Wild Adventure! I'd like to plan a trip.">
-      <button class="btn btn-wa btn-block" type="submit">{% include "tours/_icon.html" with name="whatsapp" %} Send on WhatsApp</button>
+      <button class="btn btn-wa btn-block btn-lg" type="submit">{% include "tours/_icon.html" with name="whatsapp" %} Send on WhatsApp</button>
     </form>
   </div>
 </section>

@@ -4,3 +4,6 @@ from django.apps import AppConfig
 class ToursConfig(AppConfig):
     name = "tours"
     verbose_name = "Tours & Gallery"
+
+    def ready(self):
+        from . import signals  # noqa: F401

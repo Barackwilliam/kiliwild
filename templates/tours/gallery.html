@@ -2,13 +2,8 @@
 {% block title %}Gallery | {{ SITE_NAME }}{% endblock %}
 {% block description %}Photos from our Kilimanjaro climbs, Mount Meru treks and Tanzania safaris – Serengeti, Ngorongoro Crater, Tarangire and Lake Manyara.{% endblock %}
 {% block content %}
-<section class="page-hero" style="--hero: url('{% static 'img/safari.jpg' %}')">
-  <div class="container">
-    <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'tours:home' %}">Home</a> <span>/</span> Gallery</nav>
-    <h1>Gallery</h1>
-    <p class="lead">Summits, safaris and the people who made it there.</p>
-  </div>
-</section>
+{% static 'img/safari.jpg' as hero %}
+{% include "tours/_page_hero.html" with image=hero title="Gallery" lead="Summits, safaris and the people who made it there." eyebrow="Picha" %}
 
 <section class="section">
   <div class="container">
@@ -21,7 +16,7 @@
       {% for ph in photos %}
       <figure data-kind="{{ ph.kind }}">
         <button type="button" data-open="{{ forloop.counter0 }}" aria-label="Open photo: {{ ph.caption|default:'photo' }}">
-          <img src="{{ ph.image.url }}" alt="{{ ph.caption }}" loading="lazy">
+          <img src="{{ ph.image.url }}" alt="{{ ph.caption }}" loading="lazy" decoding="async">
         </button>
         {% if ph.caption %}<figcaption>{{ ph.caption }}</figcaption>{% endif %}
       </figure>

@@ -5,7 +5,7 @@ from django.contrib.sitemaps.views import sitemap
 from django.http import HttpResponse
 from django.urls import include, path
 
-from tours.sitemaps import PackageSitemap, StaticSitemap
+from tours.sitemaps import DestinationSitemap, PackageSitemap, StaticSitemap
 
 
 def robots(request):
@@ -15,7 +15,7 @@ def robots(request):
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("sitemap.xml", sitemap, {"sitemaps": {"packages": PackageSitemap, "pages": StaticSitemap}},
+    path("sitemap.xml", sitemap, {"sitemaps": {"packages": PackageSitemap, "destinations": DestinationSitemap, "pages": StaticSitemap}},
          name="django.contrib.sitemaps.views.sitemap"),
     path("robots.txt", robots),
     path("", include("tours.urls")),
