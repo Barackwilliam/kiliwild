@@ -170,9 +170,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Business details used across the site (override in the environment if they change).
 SITE_NAME = "Kili Wild Adventure"
-WHATSAPP_NUMBER = env("WHATSAPP_NUMBER", "255678102003")          # digits only, with country code
-CONTACT_PHONE = env("CONTACT_PHONE", "+255 678 102 003")
-CONTACT_EMAIL = env("CONTACT_EMAIL", "Danielsteven051@gmail.com")
+WHATSAPP_NUMBER = env("WHATSAPP_NUMBER", "255750910158")          # digits only, with country code
+CONTACT_PHONE = env("CONTACT_PHONE", "+255 750 910 158")
+CONTACT_EMAIL = env("CONTACT_EMAIL", "info@jamiitek.com")
 INSTAGRAM_URL = env("INSTAGRAM_URL", "https://www.instagram.com/kili_wild_adventure/")
 FACEBOOK_URL = env("FACEBOOK_URL", "https://www.facebook.com/share/19tv582m5o/?mibextid=wwXIfr")
 FOUNDER_NAME = "Daniel Bwire Steven"

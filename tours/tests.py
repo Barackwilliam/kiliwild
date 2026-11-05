@@ -47,7 +47,7 @@ class SiteTests(TestCase):
         resp = self.client.get(Package.objects.get(slug="machame-route-7-days").get_absolute_url())
         self.assertContains(resp, "$1,900")
         self.assertContains(resp, "$2,400")
-        self.assertContains(resp, "wa.me/255678102003")
+        self.assertContains(resp, "wa.me/255750910158")
         self.assertContains(resp, "Elevation profile")
         self.assertContains(resp, "Barranco Wall")
         self.assertContains(resp, "Questions & answers")

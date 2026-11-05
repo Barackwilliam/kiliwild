@@ -1,7 +1,7 @@
 # Kili Wild Adventure – website
 
 Django site for Kili Wild Adventure (Moshi & Arusha, Tanzania): Kilimanjaro climbs, Mount Meru, safaris and
-combo offers. Bookings go straight to WhatsApp **+255 678 102 003**: the booking form builds a message with
+combo offers. Bookings go straight to WhatsApp **+255 750 910 158**: the booking form builds a message with
 the trip, name, date, group size and a price estimate.
 
 - **Database:** Supabase Postgres (`DATABASE_URL`), SQLite locally
