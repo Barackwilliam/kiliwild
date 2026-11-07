@@ -72,3 +72,45 @@ MAP_PLACES = [
 ]
 
 TOUR_ORDER = ["kilimanjaro", "moshi", "meru", "arusha", "tarangire", "manyara", "ngorongoro", "serengeti"]
+
+# "Journey to the summit" scroll story on the home page: Kilimanjaro's climate zones, bottom to top.
+ZONES = [
+    {"sw": "Msitu wa mvua", "name": "Rainforest", "range": "1,800 – 2,800m", "low": 1800, "high": 2800,
+     "day": "Day 1", "color": "#0f2a1c", "photo": "img/zones/rainforest.jpg",
+     "text": "Moss-draped trees, misty trails and the call of black-and-white colobus monkeys. "
+             "Every climb begins in the green heart of the mountain."},
+    {"sw": "Nyika", "name": "Heath & moorland", "range": "2,800 – 4,000m", "low": 2800, "high": 4000,
+     "day": "Day 2 – 3", "color": "#28301a", "photo": "img/zones/moorland.jpg",
+     "text": "The forest opens up into giant heather, groundsels and lobelias – plants found almost nowhere "
+             "else on Earth – with Kibo glowing ahead."},
+    {"sw": "Jangwa la juu", "name": "Alpine desert", "range": "4,000 – 5,000m", "low": 4000, "high": 5000,
+     "day": "Day 3 – 5", "color": "#3a2a1c", "photo": "img/zones/alpine.jpg",
+     "text": "A silent, lunar landscape of rock and scree. Hot sun by day, frost by night – "
+             "and Lava Tower, Barranco Wall and Barafu Camp."},
+    {"sw": "Barafu", "name": "Arctic summit zone", "range": "5,000 – 5,756m", "low": 5000, "high": 5756,
+     "day": "Day 6 · midnight", "color": "#18283a", "photo": "img/zones/arctic.jpg",
+     "text": "Glaciers, ice and thin air – about half the oxygen of sea level. You climb by headlamp, "
+             "pole pole, towards the crater rim."},
+    {"sw": "Paa la Afrika", "name": "Uhuru Peak", "range": "5,895m", "low": 5756, "high": 5895,
+     "day": "Day 6 · sunrise", "color": "#3b2412", "photo": "img/zones/summit.jpg",
+     "text": "The sun rises over the clouds and the whole continent lies below you. "
+             "You are standing on the Roof of Africa."},
+]
+
+# Horizontal wildlife gallery on the home page.
+WILDLIFE = [
+    {"sw": "Simba", "name": "Lion", "where": "Serengeti", "photo": "img/wild/simba.jpg",
+     "fact": "The Serengeti is home to one of Africa's largest lion populations."},
+    {"sw": "Tembo", "name": "Elephant", "where": "Tarangire", "photo": "img/wild/tembo.jpg",
+     "fact": "In the dry season, Tarangire's herds can number in the hundreds."},
+    {"sw": "Chui", "name": "Leopard", "where": "Seronera, Serengeti", "photo": "img/wild/chui.jpg",
+     "fact": "The master of stealth. Look up – leopards love resting in the trees."},
+    {"sw": "Faru", "name": "Black rhino", "where": "Ngorongoro Crater", "photo": "img/wild/faru.jpg",
+     "fact": "Ngorongoro Crater is one of the best places on Earth to see this rare giant."},
+    {"sw": "Twiga", "name": "Giraffe", "where": "Everywhere we go", "photo": "img/wild/twiga.jpg",
+     "fact": "Tanzania's national animal, and the tallest animal on the planet."},
+    {"sw": "Duma", "name": "Cheetah", "where": "Serengeti plains", "photo": "img/wild/duma.jpg",
+     "fact": "The fastest land animal, hunting across the open grass of the Serengeti."},
+    {"sw": "Nyumbu", "name": "Wildebeest", "where": "The Great Migration", "photo": "img/wild/nyumbu.jpg",
+     "fact": "Over a million of them move around the Serengeti every year."},
+]

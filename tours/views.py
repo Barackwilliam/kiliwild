@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.views.decorators.cache import cache_page
 
 from .models import CATEGORY_INFO, FAQ, Category, Destination, GalleryPhoto, Inclusion, Package
-from .showcase import MAP_PLACES, SLIDES, TOUR_ORDER
+from .showcase import MAP_PLACES, SLIDES, TOUR_ORDER, WILDLIFE, ZONES
 
 WHY_US = [
     ("team", "100% local team", "Born and raised under Kilimanjaro. Our guides know every trail, camp and crater.",
@@ -92,6 +92,8 @@ def home(request):
         "slides": SLIDES,
         "places": map_places(),
         "tour_order": TOUR_ORDER,
+        "zones": ZONES,
+        "wildlife": WILDLIFE,
     })
 
 

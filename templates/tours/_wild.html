@@ -1,0 +1,34 @@
+{% load static %}{# Wildlife: horizontal gallery driven by vertical scroll on desktop, swipe rail on phones. #}
+<section class="wild" data-wild aria-label="Wildlife of Tanzania">
+  <div class="wild-sticky">
+    <div class="container wild-head">
+      <div>
+        <p class="eyebrow eyebrow-light">Wanyamapori · Wildlife</p>
+        <h2>Meet the <em>locals</em></h2>
+      </div>
+      <p>From the Big Five in Ngorongoro Crater to a million wildebeest on the move – this is who you'll meet on safari.</p>
+    </div>
+    <div class="wild-rail" data-wild-rail>
+      <div class="wild-track" data-wild-track>
+        {% for a in wildlife %}
+        <article class="wild-card">
+          <img src="{% static a.photo %}" alt="{{ a.name }} in Tanzania" loading="lazy" decoding="async">
+          <span class="wild-num">{{ forloop.counter|stringformat:"02d" }}</span>
+          <div class="wild-text">
+            <span class="wild-sw">{{ a.sw }}</span>
+            <h3>{{ a.name }}</h3>
+            <p>{{ a.fact }}</p>
+            <span class="wild-where">{% include "tours/_icon.html" with name="pin" %} {{ a.where }}</span>
+          </div>
+        </article>
+        {% endfor %}
+        <a class="wild-card wild-end" href="{% url 'tours:category' 'safari' %}">
+          <span class="hand">Twende porini!</span>
+          <strong>Ready to meet them?</strong>
+          <span class="btn btn-gold">See our safaris {% include "tours/_icon.html" with name="arrow" %}</span>
+        </a>
+      </div>
+    </div>
+    <div class="container"><div class="wild-progress" aria-hidden="true"><i data-wild-bar></i></div></div>
+  </div>
+</section>

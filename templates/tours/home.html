@@ -2,7 +2,7 @@
 {% block head %}{% with slides|first as first %}<link rel="preload" as="image" href="{% static first.0 %}" fetchpriority="high">{% endwith %}{% endblock %}
 {% block content %}
 
-<section class="hero" data-slider>
+<section class="hero" data-slider data-hero>
   <div class="slides" aria-hidden="true">
     {% for img, word, caption in slides %}
     <div class="slide{% if forloop.first %} is-active{% endif %}" data-slide>
@@ -11,9 +11,9 @@
     {% endfor %}
   </div>
   <div class="hero-shade"></div>
-  <div class="container">
+  <div class="container hero-content" data-hero-content>
     <span class="karibu">Karibu Tanzania</span>
-    <h1>From the Roof of Africa to the <em>Serengeti</em> plains.</h1>
+    <h1 class="split" aria-label="From the Roof of Africa to the Serengeti plains."><span class="w" aria-hidden="true"><span style="--i:0">From</span></span> <span class="w" aria-hidden="true"><span style="--i:1">the</span></span> <span class="w" aria-hidden="true"><span style="--i:2">Roof</span></span> <span class="w" aria-hidden="true"><span style="--i:3">of</span></span> <span class="w" aria-hidden="true"><span style="--i:4">Africa</span></span> <span class="w" aria-hidden="true"><span style="--i:5">to</span></span> <span class="w" aria-hidden="true"><span style="--i:6">the</span></span> <span class="w" aria-hidden="true"><span style="--i:7"><em>Serengeti</em></span></span> <span class="w" aria-hidden="true"><span style="--i:8">plains.</span></span></h1>
     <p class="lead">Kilimanjaro climbs, Mount Meru treks and Big Five safaris with a 100% local team from Moshi & Arusha. Clear group prices, park fees included, and a tree planted for every climber.</p>
     <div class="hero-actions">
       <a class="btn btn-primary btn-lg" href="{% url 'tours:category' 'kilimanjaro' %}">Climb Kilimanjaro {% include "tours/_icon.html" with name="arrow" %}</a>
@@ -32,19 +32,20 @@
       </div>
     </div>
   </div>
+  <a class="scroll-cue" href="#routes" aria-label="Scroll down"></a>
 </section>
 
 <div class="stats-band">
   <dl class="container stats">
-    <div><dt>5,895m</dt><dd>Uhuru Peak, the Roof of Africa</dd></div>
-    <div><dt>4 routes</dt><dd>to the top of Kilimanjaro</dd></div>
-    <div><dt>4 parks</dt><dd>Serengeti, Ngorongoro, Tarangire, Manyara</dd></div>
-    <div><dt>1 tree</dt><dd>planted for every climber</dd></div>
+    <div><dt><span data-count="5895">5,895</span>m</dt><dd>Uhuru Peak, the Roof of Africa</dd></div>
+    <div><dt><span data-count="4">4</span> routes</dt><dd>to the top of Kilimanjaro</dd></div>
+    <div><dt><span data-count="4">4</span> parks</dt><dd>Serengeti, Ngorongoro, Tarangire, Manyara</dd></div>
+    <div><dt><span data-count="1">1</span> tree</dt><dd>planted for every climber</dd></div>
   </dl>
 </div>
 
 {% if kili %}
-<section class="section">
+<section class="section" id="routes">
   <div class="container">
     <div class="section-head reveal">
       <div>
@@ -61,7 +62,11 @@
 </section>
 {% endif %}
 
+{% include "tours/_summit.html" %}
+
 {% include "tours/_why.html" %}
+
+{% include "tours/_marquee.html" %}
 
 {% if safaris %}
 <section class="section">
@@ -80,6 +85,8 @@
   </div>
 </section>
 {% endif %}
+
+{% include "tours/_wild.html" %}
 
 {% include "tours/_map.html" %}
 

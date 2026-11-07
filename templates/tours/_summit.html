@@ -1,0 +1,68 @@
+{% load static %}{# Scroll story: climb Kilimanjaro through its five climate zones. JS: site.js "summit story". #}
+<section class="summit" id="summit" data-summit aria-label="Journey to the summit of Kilimanjaro">
+  <div class="summit-sticky">
+    <div class="summit-bg" data-summit-bg></div>
+    <div class="summit-stars" aria-hidden="true"></div>
+
+    <div class="container summit-grid">
+      <div class="summit-copy">
+        <p class="eyebrow eyebrow-light">Journey to the summit</p>
+        <div class="altimeter" aria-hidden="true">
+          <span class="alt-num" data-alt>1,800</span><span class="alt-unit">m</span>
+        </div>
+        <div class="alt-bar" aria-hidden="true"><i data-alt-bar></i></div>
+
+        <div class="zone-texts">
+          {% for z in zones %}
+          <div class="zone-text{% if forloop.first %} is-on{% endif %}" data-zone-text>
+            <span class="zone-day">{{ z.day }} · {{ z.range }}</span>
+            <span class="hand">{{ z.sw }}</span>
+            <h3>{{ z.name }}</h3>
+            <p>{{ z.text }}</p>
+          </div>
+          {% endfor %}
+        </div>
+
+        <ol class="zone-steps" aria-hidden="true">
+          {% for z in zones %}<li class="{% if forloop.first %}is-on{% endif %}" data-zone-step><span>{{ z.name }}</span></li>{% endfor %}
+        </ol>
+      </div>
+
+      <div class="summit-window">
+        {% for z in zones %}
+        <img src="{% static z.photo %}" alt="{{ z.name }} on Kilimanjaro" class="{% if forloop.first %}is-on{% endif %}" data-zone-img
+             loading="lazy" decoding="async" data-color="{{ z.color }}" data-low="{{ z.low }}" data-high="{{ z.high }}">
+        {% endfor %}
+        <span class="window-tag"><i></i> Live from the mountain</span>
+      </div>
+    </div>
+
+    <svg class="summit-mountain" viewBox="0 0 1440 360" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="mtnFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#0b1a12" stop-opacity=".55"/>
+          <stop offset="1" stop-color="#050c08" stop-opacity=".95"/>
+        </linearGradient>
+        <linearGradient id="trailGlow" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0" stop-color="#e3b468"/>
+          <stop offset="1" stop-color="#fff3d6"/>
+        </linearGradient>
+      </defs>
+      <g transform="translate(-180 0)">
+      <path class="mtn-back" d="M640 360 L1010 190 L1060 150 L1085 168 L1120 112 L1148 150 L1176 122 L1230 196 L1440 268 L1640 300 L1640 360Z"/>
+      <path class="mtn-main" fill="url(#mtnFill)" d="M0 360 L0 304 C180 296 360 262 500 204 C620 152 750 80 856 50 Q900 38 944 50 C1050 82 1170 158 1300 232 C1360 266 1410 284 1440 290 L1640 300 L1640 360Z"/>
+      <path class="mtn-snow" d="M812 64 Q858 46 900 39 Q944 46 990 64 L966 72 L940 63 L916 76 L894 64 L870 74 L846 65Z"/>
+      <path class="trail-base" d="M250 296 C290 292 300 276 360 266 S470 246 520 222 S600 200 640 172 S716 140 760 118 S832 88 862 64 L900 40"/>
+      <path class="trail-glow" data-trail-glow d="M250 296 C290 292 300 276 360 266 S470 246 520 222 S600 200 640 172 S716 140 760 118 S832 88 862 64 L900 40"/>
+      <path class="trail-done" data-trail d="M250 296 C290 292 300 276 360 266 S470 246 520 222 S600 200 640 172 S716 140 760 118 S832 88 862 64 L900 40"/>
+      <g class="camps">
+        <circle cx="360" cy="266" r="4"/><circle cx="520" cy="222" r="4"/><circle cx="640" cy="172" r="4"/><circle cx="760" cy="118" r="4"/><circle cx="862" cy="64" r="4"/>
+      </g>
+      <g class="flag" transform="translate(900 40)"><path d="M0 0 V-34" stroke="#fff" stroke-width="2.5"/><path d="M0 -34 L24 -27 L0 -20Z" fill="#e3b468"/></g>
+      <g class="climber" data-climber><circle class="climber-halo" r="16"/><circle class="climber-dot" r="7"/></g>
+      </g>
+    </svg>
+
+    <a class="summit-cta" href="{% url 'tours:category' 'kilimanjaro' %}" data-summit-cta>Choose your route {% include "tours/_icon.html" with name="arrow" %}</a>
+  </div>
+</section>

@@ -409,3 +409,204 @@
     }, { passive: true });
   });
 })();
+
+// ======================================================================
+// "Ultra" layer: hero parallax, counters, summit story, wildlife rail,
+// big marquee, desktop cursor + 3D tilt + magnetic buttons
+// ======================================================================
+(function () {
+  "use strict";
+  var root = document.documentElement;
+  var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  var vh = window.innerHeight;
+  var visible = {};                                     // which animated sections are on screen
+  var watch = function (el, key) {
+    if (!el || !("IntersectionObserver" in window)) { visible[key] = !!el; return; }
+    new IntersectionObserver(function (e) { visible[key] = e[0].isIntersecting; }, { rootMargin: "100px 0px" }).observe(el);
+  };
+  var hex = function (h) { h = h.replace("#", ""); return [0, 2, 4].map(function (i) { return parseInt(h.substr(i, 2), 16); }); };
+  var mixc = function (a, b, k) { return a.map(function (v, i) { return Math.round(v + (b[i] - v) * k); }); };
+  var clamp = function (x) { return Math.max(0, Math.min(1, x)); };
+
+  // ---- counters
+  var counters = document.querySelectorAll("[data-count]");
+  if (counters.length && "IntersectionObserver" in window && !still) {
+    var cio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        cio.unobserve(e.target);
+        var el = e.target, end = +el.dataset.count, t0 = performance.now(), dur = end > 100 ? 1700 : 900;
+        (function tick(now) {
+          var k = Math.min(1, (now - t0) / dur);
+          el.textContent = Math.round(end * (1 - Math.pow(1 - k, 3))).toLocaleString("en-US");
+          if (k < 1) requestAnimationFrame(tick);
+        })(t0);
+      });
+    }, { threshold: 0.6 });
+    counters.forEach(function (c) { c.textContent = "0"; cio.observe(c); });
+  }
+
+  // ---- hero parallax
+  var hero = document.querySelector("[data-hero]");
+  var heroSlides = hero && hero.querySelector(".slides");
+  var heroContent = document.querySelector("[data-hero-content]");
+  watch(hero, "hero");
+  function heroUpdate() {
+    if (!hero || still || !visible.hero) return;
+    var y = window.scrollY, k = y / vh;
+    heroSlides.style.transform = "translate3d(0," + (y * 0.38) + "px,0) scale(" + (1 + k * 0.1) + ")";
+    heroContent.style.transform = "translate3d(0," + (y * 0.2) + "px,0)";
+    heroContent.style.opacity = Math.max(0, 1 - k * 1.15);
+  }
+
+  // ---- summit story
+  var summit = document.querySelector("[data-summit]");
+  var S = null;
+  if (summit) {
+    var trail = summit.querySelector("[data-trail]");
+    var imgs = summit.querySelectorAll("[data-zone-img]");
+    S = {
+      bg: summit.querySelector("[data-summit-bg]"), alt: summit.querySelector("[data-alt]"),
+      bar: summit.querySelector("[data-alt-bar]"), texts: summit.querySelectorAll("[data-zone-text]"),
+      steps: summit.querySelectorAll("[data-zone-step]"), imgs: imgs, trail: trail,
+      glow: summit.querySelector("[data-trail-glow]"),
+      climber: summit.querySelector("[data-climber]"), cta: summit.querySelector("[data-summit-cta]"),
+      L: trail.getTotalLength(), cur: -1, lastAlt: -1,
+      zones: Array.prototype.map.call(imgs, function (im) {
+        return { c: hex(im.dataset.color), low: +im.dataset.low, high: +im.dataset.high };
+      })
+    };
+    trail.style.strokeDasharray = S.L;
+    trail.style.strokeDashoffset = S.L;
+    S.glow.style.strokeDasharray = S.L;
+    S.glow.style.strokeDashoffset = S.L;
+    imgs.forEach(function (im) { im.loading = "eager"; });   // all five are needed as you scroll
+    watch(summit, "summit");
+  }
+  function summitUpdate() {
+    if (!S || !visible.summit) return;
+    var r = summit.getBoundingClientRect();
+    var total = summit.offsetHeight - vh;
+    var p = clamp(-r.top / total);
+    var N = S.zones.length, f = Math.min(p * N, N - 0.0001), i = Math.floor(f), local = f - i;
+    var z = S.zones[i], nz = S.zones[Math.min(N - 1, i + 1)];
+    var alt = Math.round(z.low + (z.high - z.low) * (p >= 0.999 ? 1 : local));
+    if (alt !== S.lastAlt) { S.alt.textContent = alt.toLocaleString("en-US"); S.lastAlt = alt; }
+    S.bar.style.width = (p * 100) + "%";
+    S.bg.style.backgroundColor = "rgb(" + mixc(z.c, nz.c, clamp((local - 0.65) / 0.35)).join(",") + ")";
+    var stars = i === 3 ? clamp(local * 2) : i === 4 ? clamp(1 - local * 1.5) : i === 2 ? clamp((local - 0.7) * 2) : 0;
+    summit.style.setProperty("--stars", stars.toFixed(3));
+    summit.style.setProperty("--flag", p > 0.96 ? 1 : 0);
+    if (i !== S.cur) {
+      S.cur = i;
+      S.texts.forEach(function (t, k) { t.classList.toggle("is-on", k === i); });
+      S.imgs.forEach(function (t, k) { t.classList.toggle("is-on", k === i); });
+      S.steps.forEach(function (t, k) { t.classList.toggle("is-on", k <= i); t.classList.toggle("is-current", k === i); });
+    }
+    var len = S.L * p;
+    S.trail.style.strokeDashoffset = S.L - len;
+    S.glow.style.strokeDashoffset = S.L - len;
+    var pt = S.trail.getPointAtLength(len);
+    S.climber.setAttribute("transform", "translate(" + pt.x.toFixed(1) + " " + pt.y.toFixed(1) + ")");
+    S.cta.classList.toggle("is-on", p > 0.9);
+  }
+
+  // ---- wildlife rail: pinned + horizontal on desktop, swipe on phones
+  var wild = document.querySelector("[data-wild]");
+  var W = wild && { track: wild.querySelector("[data-wild-track]"), rail: wild.querySelector("[data-wild-rail]"),
+                    bar: wild.querySelector("[data-wild-bar]"), dist: 0, pinned: false };
+  function setupWild() {
+    if (!W) return;
+    var desk = window.innerWidth > 900 && !still;
+    wild.classList.toggle("is-pinned", desk);
+    W.pinned = desk;
+    if (desk) {
+      W.dist = Math.max(0, W.track.scrollWidth - window.innerWidth);
+      wild.style.height = (vh + W.dist) + "px";
+    } else {
+      wild.style.height = ""; W.track.style.transform = ""; W.dist = 0;
+    }
+  }
+  if (W) {
+    watch(wild, "wild");
+    setupWild();
+    W.rail.addEventListener("scroll", function () {
+      if (W.pinned) return;
+      var m = W.rail.scrollWidth - W.rail.clientWidth;
+      W.bar.style.width = (m > 0 ? W.rail.scrollLeft / m * 100 : 0) + "%";
+    }, { passive: true });
+  }
+  function wildUpdate() {
+    if (!W || !W.pinned || !visible.wild) return;
+    var r = wild.getBoundingClientRect(), total = wild.offsetHeight - vh, p = clamp(-r.top / total);
+    W.track.style.transform = "translate3d(" + (-p * W.dist).toFixed(1) + "px,0,0)";
+    W.bar.style.width = (p * 100) + "%";
+  }
+
+  // ---- big marquee (speeds up while you scroll)
+  var bm = document.querySelector("[data-bigmarquee]");
+  var rows = bm ? Array.prototype.slice.call(bm.querySelectorAll("[data-bm]")) : [];
+  var bmX = 0, lastY = window.scrollY, boost = 0;
+  watch(bm, "bm");
+  function bmUpdate() {
+    var dy = Math.abs(window.scrollY - lastY);
+    lastY = window.scrollY;
+    boost += (Math.min(dy, 80) * 0.35 - boost) * 0.1;
+    if (!bm || still || !visible.bm) return;
+    bmX += 0.6 + boost;
+    rows.forEach(function (row) {
+      var w = row.firstElementChild.offsetWidth || 1, x = bmX % w;
+      row.style.transform = "translate3d(" + (row.dataset.bm === "1" ? -x : x - w).toFixed(1) + "px,0,0)";
+    });
+  }
+
+  // ---- desktop: cursor, 3D tilt, magnetic buttons
+  var cur = null;
+  if (fine && !still) {
+    var dot = document.createElement("div"), ring = document.createElement("div");
+    dot.className = "cursor-dot"; ring.className = "cursor-ring";
+    document.body.appendChild(dot); document.body.appendChild(ring);
+    cur = { mx: -100, my: -100, rx: -100, ry: -100, dot: dot, ring: ring };
+    window.addEventListener("pointermove", function (e) {
+      cur.mx = e.clientX; cur.my = e.clientY;
+      root.classList.add("has-cursor");
+      var t = e.target.closest && e.target.closest("a, button, summary, [role=button], input, select, textarea");
+      ring.classList.toggle("is-link", !!t);
+    }, { passive: true });
+    document.addEventListener("mouseleave", function () { root.classList.remove("has-cursor"); });
+
+    document.querySelectorAll(".card, .why-card, .dest, .feature, .wild-card").forEach(function (c) {
+      c.classList.add("tilt");
+      var g = document.createElement("span"); g.className = "tilt-glare"; c.appendChild(g);
+      c.addEventListener("pointermove", function (e) {
+        var r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        c.style.transform = "perspective(900px) rotateX(" + ((0.5 - y) * 8).toFixed(2) + "deg) rotateY(" + ((x - 0.5) * 10).toFixed(2) + "deg) translateY(-6px)";
+        c.style.setProperty("--gx", (x * 100) + "%"); c.style.setProperty("--gy", (y * 100) + "%");
+      });
+      c.addEventListener("pointerleave", function () { c.style.transform = ""; });
+    });
+    document.querySelectorAll(".btn, .card-go, .wa-float").forEach(function (b) {
+      b.addEventListener("pointermove", function (e) {
+        var r = b.getBoundingClientRect();
+        b.style.transform = "translate(" + ((e.clientX - r.left - r.width / 2) * 0.2).toFixed(1) + "px," + ((e.clientY - r.top - r.height / 2) * 0.3).toFixed(1) + "px)";
+      });
+      b.addEventListener("pointerleave", function () { b.style.transform = ""; });
+    });
+  }
+  function cursorUpdate() {
+    if (!cur) return;
+    cur.rx += (cur.mx - cur.rx) * 0.18; cur.ry += (cur.my - cur.ry) * 0.18;
+    cur.dot.style.transform = "translate3d(" + cur.mx + "px," + cur.my + "px,0)";
+    cur.ring.style.transform = "translate3d(" + cur.rx.toFixed(1) + "px," + cur.ry.toFixed(1) + "px,0)";
+  }
+
+  // ---- one loop for everything
+  function loop() {
+    heroUpdate(); summitUpdate(); wildUpdate(); bmUpdate(); cursorUpdate();
+    requestAnimationFrame(loop);
+  }
+  window.addEventListener("resize", function () { vh = window.innerHeight; setupWild(); }, { passive: true });
+  window.addEventListener("load", setupWild);
+  requestAnimationFrame(loop);
+})();
