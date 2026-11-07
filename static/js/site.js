@@ -471,6 +471,7 @@
       bar: summit.querySelector("[data-alt-bar]"), texts: summit.querySelectorAll("[data-zone-text]"),
       steps: summit.querySelectorAll("[data-zone-step]"), imgs: imgs, trail: trail,
       glow: summit.querySelector("[data-trail-glow]"),
+      label: summit.querySelector("[data-window-label]"),
       climber: summit.querySelector("[data-climber]"), cta: summit.querySelector("[data-summit-cta]"),
       L: trail.getTotalLength(), cur: -1, lastAlt: -1,
       zones: Array.prototype.map.call(imgs, function (im) {
@@ -501,6 +502,7 @@
     if (i !== S.cur) {
       S.cur = i;
       S.texts.forEach(function (t, k) { t.classList.toggle("is-on", k === i); });
+      if (S.label) S.label.textContent = S.texts[i].querySelector("h3").textContent;
       S.imgs.forEach(function (t, k) { t.classList.toggle("is-on", k === i); });
       S.steps.forEach(function (t, k) { t.classList.toggle("is-on", k <= i); t.classList.toggle("is-current", k === i); });
     }

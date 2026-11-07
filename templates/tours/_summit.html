@@ -33,7 +33,7 @@
         <img src="{% static z.photo %}" alt="{{ z.name }} on Kilimanjaro" class="{% if forloop.first %}is-on{% endif %}" data-zone-img
              loading="lazy" decoding="async" data-color="{{ z.color }}" data-low="{{ z.low }}" data-high="{{ z.high }}">
         {% endfor %}
-        <span class="window-tag"><i></i> Live from the mountain</span>
+        <span class="window-tag"><i></i> Live · <b data-window-label>{{ zones.0.name }}</b></span>
       </div>
     </div>
 

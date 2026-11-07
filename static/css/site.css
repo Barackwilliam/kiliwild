@@ -1001,17 +1001,37 @@ a.contact-wa:hover { background: var(--wa-deep); border-color: var(--wa-deep); }
   display: inline-flex; align-items: center; gap: .5em; padding: .9em 1.4em; border-radius: 999px; background: var(--gold); color: var(--forest-deep);
   font-weight: 800; text-decoration: none; opacity: 0; transform: translateY(20px); transition: opacity .5s, transform .5s var(--ease); }
 .summit-cta.is-on { opacity: 1; transform: none; }
+.window-tag b { font-weight: 800; }
 @media (max-width: 900px) {
   .summit { height: 420vh; }
-  .summit-grid { grid-template-columns: 1fr; gap: 18px; padding-top: 92px; padding-bottom: 30vh; }
-  .summit-window { order: -1; justify-self: start; width: 58%; max-height: 30vh; aspect-ratio: 4 / 3.4; transform: none; border-radius: 20px; }
-  .zone-texts { min-height: 200px; }
-  .zone-text p { font-size: .94rem; }
+  .summit-sticky { align-items: flex-start; }
+  .summit-grid { grid-template-columns: 1fr; gap: 14px; padding-top: 78px; padding-bottom: 0; }
+  .summit-window { order: -1; justify-self: stretch; width: 100%; max-height: none; aspect-ratio: 16 / 9; transform: none; border-radius: 20px;
+    box-shadow: 0 24px 50px -24px rgba(0, 0, 0, .9), 0 0 0 1px rgba(255, 255, 255, .14); }
+  .summit-window::after { background: linear-gradient(180deg, rgba(0, 0, 0, .35), transparent 35%, transparent 70%, rgba(0, 0, 0, .3)); }
+  .window-tag { top: 10px; bottom: auto; left: 10px; font-size: .72rem; padding: .45em .8em; }
+  .summit .eyebrow { margin: 4px 0 2px; }
+  .alt-num { font-size: 3.9rem; }
+  .alt-unit { font-size: 1.5rem; }
+  .alt-bar { margin: 12px 0 16px; }
+  .zone-texts { min-height: 190px; }
+  .zone-text .hand { font-size: 1.45rem; }
+  .zone-text h3 { font-size: 1.75rem; }
+  .zone-text p { font-size: .93rem; line-height: 1.55; }
+  .zone-steps { margin-top: 18px; }
   .zone-steps span { display: none; }
   .summit-mountain { height: 24vh; }
   .summit-cta { left: 16px; right: auto; bottom: 18px; }
 }
 @media (max-width: 380px) { .zone-text p { font-size: .88rem; } }
+@media (max-width: 900px) and (max-height: 740px) {
+  .summit-window { aspect-ratio: 2 / 1; }
+  .alt-num { font-size: 3.2rem; }
+  .zone-texts { min-height: 150px; }
+  .zone-text p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .zone-steps { margin-top: 12px; }
+  .summit-mountain { height: 15vh; }
+}
 
 /* ---------- big marquee */
 .bigmarquee { overflow: hidden; padding: clamp(40px, 6vw, 80px) 0; background: var(--sand); }
