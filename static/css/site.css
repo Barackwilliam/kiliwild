@@ -1408,3 +1408,22 @@ html:not(.is-scrolled) .light-hero .nav-toggle { color: var(--forest); border-co
 .sun-disc { bottom: calc(var(--land) * .18); }
 .sun-copy small, .sun-copy p { text-shadow: 0 1px 2px rgba(60, 20, 10, .55); }
 @media (max-width: 899px) { .topo-orb.o3 { display: none; } }
+
+/* ---------- photo quality: lighter shades, no blur, a touch more colour */
+.xh-bg, .page-hero-bg img, .card-media img, .dest img, .why-card img, .wild-card img, .summit-window img, .feature img,
+.arch-window img, .bino-lens img, .pol img, .map-card-media img { filter: saturate(1.07) contrast(1.03); }
+.th-bg { inset: 0; }
+.th-bg img { filter: saturate(1.08) contrast(1.04) brightness(.86); transform: scale(1.06); }
+.th-bg img.is-on { transform: scale(1); }
+.ticket-hero::after {
+  background:
+    linear-gradient(90deg, rgba(5, 12, 8, .78) 0%, rgba(5, 12, 8, .5) 42%, rgba(5, 12, 8, .12) 75%, rgba(5, 12, 8, .05) 100%),
+    linear-gradient(180deg, rgba(5, 12, 8, .35) 0%, rgba(5, 12, 8, 0) 25%, rgba(5, 12, 8, 0) 70%, rgba(5, 12, 8, .55) 100%);
+}
+@media (max-width: 900px) {
+  .ticket-hero::after { background: linear-gradient(180deg, rgba(5, 12, 8, .72) 0%, rgba(5, 12, 8, .55) 38%, rgba(5, 12, 8, .2) 62%, rgba(5, 12, 8, .55) 100%); }
+  .th-copy h1, .th-copy .lead, .th-copy .karibu { text-shadow: 0 1px 3px rgba(0, 0, 0, .45); }
+}
+.page-hero::after { background: linear-gradient(180deg, rgba(6, 18, 11, .42) 0%, rgba(6, 18, 11, .12) 40%, rgba(6, 18, 11, .82) 100%); }
+.xh-exp::after { background: linear-gradient(180deg, rgba(4, 12, 9, .5), rgba(4, 12, 9, .1) 40%, rgba(4, 12, 9, .85)); }
+.xh-mag::after { background: linear-gradient(180deg, rgba(0, 0, 0, .38) 0%, rgba(0, 0, 0, 0) 34%, rgba(0, 0, 0, .18) 60%, rgba(0, 0, 0, .86) 100%); }

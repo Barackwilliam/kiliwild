@@ -4,6 +4,7 @@ Load the client's packages, destinations, FAQs and photos.
     python manage.py seed_kiliwild              # adds whatever is missing (safe to run again)
     python manage.py seed_kiliwild --reset      # rewrite packages/destinations/FAQs from seed_data.py
     python manage.py seed_kiliwild --no-gallery
+    python manage.py seed_kiliwild --refresh-photos   # re-upload every photo from seed_photos (after improving them)
 
 --reset overwrites prices and text edited in the admin. Photos are saved through Django's default storage,
 so with SUPABASE_S3_* set they go straight into the Supabase bucket.
@@ -22,8 +23,10 @@ PHOTOS = Path(settings.BASE_DIR) / "seed_photos"
 PACKAGE_CHILD_KEYS = ("price_tiers", "itinerary", "inclusions", "exclusions", "photo", "destinations")
 
 
-def attach_photo(obj, filename, name):
+def attach_photo(obj, filename, name, replace=False):
     path = PHOTOS / (filename or "")
+    if replace and obj.image and filename and path.exists():
+        obj.image.delete(save=False)
     if not obj.image and filename and path.exists():
         with path.open("rb") as fh:
             obj.image.save(f"{name}.jpg", File(fh), save=True)
@@ -36,8 +39,10 @@ class Command(BaseCommand):
         parser.add_argument("--reset", action="store_true",
                             help="Overwrite existing packages, destinations and FAQs with seed_data.py")
         parser.add_argument("--no-gallery", action="store_true")
+        parser.add_argument("--refresh-photos", action="store_true",
+                            help="Replace the photos of packages, destinations and the gallery with the files in seed_photos")
 
-    def handle(self, *args, reset=False, no_gallery=False, **opts):
+    def handle(self, *args, reset=False, no_gallery=False, refresh_photos=False, **opts):
         where = f"Supabase bucket '{settings.SUPABASE_BUCKET}'" if settings.USE_SUPABASE_STORAGE else "local media/"
         self.stdout.write(f"Photos will be stored in: {where}")
         for data in seed_data.DESTINATIONS:
@@ -47,7 +52,27 @@ class Command(BaseCommand):
         self._faqs(reset)
         if not no_gallery:
             self._gallery()
+        if refresh_photos:
+            self._refresh_photos()
         self.stdout.write(self.style.SUCCESS("Done."))
+
+    def _refresh_photos(self):
+        photo_of = {d["slug"]: d.get("photo") for d in seed_data.DESTINATIONS}
+        for obj in Destination.objects.all():
+            attach_photo(obj, photo_of.get(obj.slug), f"destination-{obj.slug}", replace=True)
+        photo_of = {d["slug"]: d.get("photo") for d in seed_data.PACKAGES}
+        for obj in Package.objects.all():
+            attach_photo(obj, photo_of.get(obj.slug), obj.slug, replace=True)
+        n = 0
+        for ph in GalleryPhoto.objects.exclude(source_name=""):
+            path = PHOTOS / ph.source_name
+            if path.exists():
+                ph.image.delete(save=False)
+                with path.open("rb") as fh:
+                    ph.image.save(f"kiliwild-{ph.source_name}", File(fh), save=True)
+                n += 1
+        self.stdout.write(f"  refreshed photos: {Destination.objects.count()} destinations, "
+                          f"{Package.objects.count()} packages, {n} gallery photos")
 
     @transaction.atomic
     def _destination(self, data, reset):
