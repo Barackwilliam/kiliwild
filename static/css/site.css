@@ -1016,8 +1016,13 @@ a.contact-wa:hover { background: var(--wa-deep); border-color: var(--wa-deep); }
 /* ---------- big marquee */
 .bigmarquee { overflow: hidden; padding: clamp(40px, 6vw, 80px) 0; background: var(--sand); }
 .bm-row { display: flex; width: max-content; white-space: nowrap; will-change: transform; }
-.bm-row span { font: 500 clamp(3.4rem, 9vw, 8.5rem)/1.05 var(--display); letter-spacing: -.03em; color: transparent; -webkit-text-stroke: 1.5px rgba(23, 58, 42, .35); padding-right: .3em; }
-.bm-solid span { color: var(--forest); -webkit-text-stroke: 0; font-style: italic; font-weight: 400; }
+.bm-row span {
+  font: 600 clamp(3.4rem, 9vw, 8.5rem)/1.08 var(--display); letter-spacing: -.03em; padding-right: .3em;
+  color: var(--rust);
+  background: linear-gradient(90deg, #b5601e 0%, #d4a054 50%, #b5601e 100%); background-size: 50% 100%;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.bm-solid span { background: none; -webkit-text-fill-color: var(--forest); color: var(--forest); font-style: italic; font-weight: 500; }
 
 /* ---------- wildlife rail */
 .wild { position: relative; background: #0c1711; color: #fff; }
