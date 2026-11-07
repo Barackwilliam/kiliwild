@@ -78,10 +78,18 @@ def elevation_profile(days, width=760, height=230):
             "base": pad_t + h, "peak": peak, "left": pad_l, "right": width - pad_r}
 
 
+def ticket_package(slug, category):
+    """The package shown on a homepage ticket: the usual one, or the first of its kind if it was removed."""
+    return (active_packages().filter(slug=slug).first()
+            or active_packages().filter(category=category, price_from__isnull=False).first())
+
+
 @public_page
 def home(request):
     packages = active_packages().filter(is_featured=True)
     return render(request, "tours/home.html", {
+        "ticket_climb": ticket_package("machame-route-7-days", Category.KILIMANJARO),
+        "ticket_safari": ticket_package("4-days-safari", Category.SAFARI),
         "kili": [p for p in packages if p.category == Category.KILIMANJARO],
         "safaris": [p for p in packages if p.category == Category.SAFARI],
         "meru": [p for p in packages if p.category == Category.MERU][:1],

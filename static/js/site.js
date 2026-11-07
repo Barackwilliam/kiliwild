@@ -614,3 +614,43 @@
   window.addEventListener("load", setupWild);
   requestAnimationFrame(loop);
 })();
+
+// ---- ticket hero: switch between the Climb and Safari tickets (auto every few seconds, or on tap)
+(function () {
+  "use strict";
+  var hero = document.querySelector("[data-ticket-hero]");
+  if (!hero) return;
+  var tabs = hero.querySelectorAll("[data-th-tab]");
+  var tickets = hero.querySelectorAll("[data-th-ticket]");
+  var bgs = hero.querySelectorAll("[data-th-bg]");
+  if ("IntersectionObserver" in window) {               // phones: hide the floating WhatsApp button while it would cover the ticket
+    new IntersectionObserver(function (e) {
+      document.documentElement.classList.toggle("ticket-hero-on", e[0].intersectionRatio > 0.55);
+    }, { threshold: [0, 0.55, 1] }).observe(hero);
+  }
+  if (tickets.length < 2) { hero.querySelector(".th-tabs").hidden = true; return; }
+  var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var current = "climb", timer = null, paused = false;
+  function show(name) {
+    if (name === current) return;
+    current = name;
+    tickets.forEach(function (t) {
+      var on = t.dataset.thTicket === name;
+      t.classList.toggle("is-out", !on && t.classList.contains("is-on"));
+      t.classList.toggle("is-on", on);
+      setTimeout(function () { t.classList.remove("is-out"); }, 800);
+    });
+    tabs.forEach(function (b) { var on = b.dataset.thTab === name; b.classList.toggle("is-on", on); b.setAttribute("aria-selected", on ? "true" : "false"); });
+    bgs.forEach(function (i) { i.classList.toggle("is-on", i.dataset.thBg === name); });
+  }
+  function schedule() {
+    clearTimeout(timer);
+    if (still || paused || document.hidden) return;
+    timer = setTimeout(function () { show(current === "climb" ? "safari" : "climb"); schedule(); }, 6000);
+  }
+  tabs.forEach(function (b) { b.addEventListener("click", function () { paused = true; clearTimeout(timer); show(b.dataset.thTab); }); });
+  hero.querySelector(".th-stage").addEventListener("pointerenter", function () { clearTimeout(timer); });
+  hero.querySelector(".th-stage").addEventListener("pointerleave", schedule);
+  document.addEventListener("visibilitychange", schedule);
+  schedule();
+})();

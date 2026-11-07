@@ -1,38 +1,69 @@
 {% extends "base.html" %}{% load static tours_extras %}
-{% block head %}<link rel="preload" as="image" href="{% static 'img/slides/kilimanjaro.jpg' %}" fetchpriority="high"><link rel="preload" as="image" href="{% static 'img/slides/elephants.jpg' %}" fetchpriority="high">{% endblock %}
+{% block head %}<link rel="preload" as="image" href="{% static 'img/slides/kilimanjaro.jpg' %}" fetchpriority="high"><link rel="preload" as="image" href="{% static 'img/zones/summit.jpg' %}">{% endblock %}
 {% block content %}
 
-<section class="split-hero" data-hero aria-label="Choose your adventure">
-  <h1 class="sh-title"><span class="hand">Karibu Tanzania</span> Choose your adventure</h1>
+<section class="ticket-hero" data-hero data-ticket-hero aria-label="Your ticket to Tanzania">
+  <div class="th-bg" aria-hidden="true">
+    <img src="{% static 'img/slides/kilimanjaro.jpg' %}" alt="" class="is-on" data-th-bg="climb" fetchpriority="high" decoding="async" data-hero-media>
+    <img src="{% static 'img/slides/elephants.jpg' %}" alt="" data-th-bg="safari" decoding="async" data-hero-media>
+  </div>
 
-  <a class="sh-half sh-climb" href="{% url 'tours:category' 'kilimanjaro' %}">
-    <img src="{% static 'img/slides/kilimanjaro.jpg' %}" alt="Climbers' camp below Kilimanjaro at sunset" fetchpriority="high" decoding="async" data-hero-media>
-    <div class="sh-content" data-hero-content>
-      <span class="sh-kicker hand">Panda Kilimanjaro</span>
-      <span class="sh-word"><span>Climb</span></span>
-      <span class="sh-sub">
-        <span>4 routes to Uhuru Peak, 5,895m<br><small>From $1,600 · park fees included</small></span>
-        <span class="sh-go" aria-hidden="true">{% include "tours/_icon.html" with name="arrow" %}</span>
-      </span>
+  <div class="container th-grid">
+    <div class="th-copy" data-hero-content>
+      <span class="karibu">Karibu Tanzania</span>
+      <h1>Your ticket to the <em>Roof of Africa</em> and the Serengeti.</h1>
+      <p class="lead">Kilimanjaro climbs and Big Five safaris with a 100% local team from Moshi &amp; Arusha. Park fees included, airport pickup included.</p>
+      <div class="th-actions">
+        <a class="btn btn-primary btn-lg" href="{% url 'tours:category' 'kilimanjaro' %}">All climbs {% include "tours/_icon.html" with name="arrow" %}</a>
+        <a class="btn btn-ghost btn-lg" href="{% url 'tours:category' 'safari' %}">All safaris</a>
+      </div>
     </div>
-  </a>
 
-  <a class="sh-half sh-safari" href="{% url 'tours:category' 'safari' %}">
-    <img src="{% static 'img/slides/elephants.jpg' %}" alt="Safari jeep beside elephants at a waterhole" fetchpriority="high" decoding="async" data-hero-media>
-    <div class="sh-content" data-hero-content>
-      <span class="sh-kicker hand">Twende Safari</span>
-      <span class="sh-word"><span>Safari</span></span>
-      <span class="sh-sub">
-        <span>Serengeti · Ngorongoro · Tarangire<br><small>3 to 5 days · Big Five</small></span>
-        <span class="sh-go" aria-hidden="true">{% include "tours/_icon.html" with name="arrow" %}</span>
-      </span>
+    <div class="th-ticket-wrap">
+      <div class="th-tabs" role="tablist" aria-label="Choose a trip">
+        <button type="button" role="tab" class="is-on" aria-selected="true" data-th-tab="climb">{% include "tours/_icon.html" with name="mountain" %} Climb</button>
+        <button type="button" role="tab" aria-selected="false" data-th-tab="safari">{% include "tours/_icon.html" with name="paw" %} Safari</button>
+      </div>
+      <div class="th-stage">
+        {% with p=ticket_climb %}{% if p %}
+        <a class="ticket is-on" href="{{ p.get_absolute_url }}" data-th-ticket="climb" aria-label="{{ p.title }}, {{ p.duration_days }} days{% if p.price_from %}, from {{ p.price_from|usd }}{% endif %}">
+          <span class="t-photo"><img src="{% static 'img/zones/summit.jpg' %}" alt="" decoding="async"><span class="t-badge">Boarding pass</span><span class="t-class">Adventure class</span></span>
+          <span class="t-body">
+            <span class="t-route">
+              <span><small>From</small><b>MOS</b><i>Moshi</i></span>
+              <span class="t-line" aria-hidden="true">{% include "tours/_icon.html" with name="mountain" %}</span>
+              <span class="t-to"><small>To</small><b>UHU</b><i>Uhuru Peak · 5,895m</i></span>
+            </span>
+            <span class="t-meta">
+              <span><small>Route</small><b>{{ p.title|cut:"7 Days "|cut:" Route" }}</b></span>
+              <span><small>Days</small><b>{{ p.duration_days }}</b></span>
+              <span><small>From</small><b>{% if p.price_from %}{{ p.price_from|usd }}{% else %}Ask us{% endif %}</b></span>
+            </span>
+          </span>
+          <span class="t-foot"><span class="t-bar" aria-hidden="true"></span><span class="btn btn-primary t-book">Book {% include "tours/_icon.html" with name="arrow" %}</span></span>
+        </a>
+        {% endif %}{% endwith %}
+        {% with p=ticket_safari %}{% if p %}
+        <a class="ticket" href="{{ p.get_absolute_url }}" data-th-ticket="safari" aria-label="{{ p.title }}, {{ p.duration_days }} days{% if p.price_from %}, from {{ p.price_from|usd }}{% endif %}">
+          <span class="t-photo"><img src="{% static 'img/slides/lions.jpg' %}" alt="" loading="lazy" decoding="async"><span class="t-badge">Safari pass</span><span class="t-class">Big Five class</span></span>
+          <span class="t-body">
+            <span class="t-route">
+              <span><small>From</small><b>ARK</b><i>Arusha</i></span>
+              <span class="t-line" aria-hidden="true">{% include "tours/_icon.html" with name="paw" %}</span>
+              <span class="t-to"><small>To</small><b>SER</b><i>Serengeti</i></span>
+            </span>
+            <span class="t-meta">
+              <span><small>Trip</small><b>{{ p.badge|default:"Big Five" }}</b></span>
+              <span><small>Days</small><b>{{ p.duration_days }}</b></span>
+              <span><small>From</small><b>{% if p.price_from %}{{ p.price_from|usd }}{% else %}Ask us{% endif %}</b></span>
+            </span>
+          </span>
+          <span class="t-foot"><span class="t-bar" aria-hidden="true"></span><span class="btn btn-primary t-book">Book {% include "tours/_icon.html" with name="arrow" %}</span></span>
+        </a>
+        {% endif %}{% endwith %}
+      </div>
+      <p class="th-note">{% include "tours/_icon.html" with name="check" %} Park fees, guide &amp; airport pickup on every ticket</p>
     </div>
-  </a>
-
-  <div class="sh-or" aria-hidden="true">
-    <svg viewBox="0 0 120 120"><defs><path id="shRing" d="M60 60 m-47 0 a47 47 0 1 1 94 0 a47 47 0 1 1 -94 0"/></defs>
-      <text><textPath href="#shRing">CHAGUA · CHOOSE · CHAGUA · CHOOSE ·</textPath></text></svg>
-    <span>au</span>
   </div>
 </section>
 

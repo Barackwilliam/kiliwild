@@ -1103,77 +1103,95 @@ a.contact-wa:hover { background: var(--wa-deep); border-color: var(--wa-deep); }
   .zone-texts { min-height: 0; }
 }
 
-/* ---------- split hero: Climb | au | Safari */
-.split-hero { position: relative; height: 100vh; height: 100svh; min-height: 620px; display: flex; flex-direction: column; background: #050b07; overflow: hidden; }
-.sh-title {
-  position: absolute; z-index: 4; left: 0; right: 0; top: calc(var(--header-h) + 8px); text-align: center; pointer-events: none;
-  font: 800 .72rem/1 var(--body); letter-spacing: .24em; text-transform: uppercase; color: rgba(255, 255, 255, .82);
-  animation: rise .9s var(--ease) .2s both;
-}
-.sh-title .hand { display: block; font-size: 1.7rem; letter-spacing: 0; text-transform: none; color: var(--gold-soft); margin-bottom: 4px; }
-.sh-half {
-  position: relative; flex: 1 1 50%; min-height: 0; display: flex; flex-direction: column; justify-content: flex-end;
-  padding: 22px 20px 26px; color: #fff; text-decoration: none; overflow: hidden; isolation: isolate;
-  transition: flex-grow .8s var(--ease);
-}
-.sh-half img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2;
-  animation: sh-zoom 16s ease-in-out infinite alternate; transition: filter .6s var(--ease); will-change: transform; }
-.sh-safari img { animation-delay: -8s; }
-@keyframes sh-zoom { from { transform: scale(1.04); } to { transform: scale(1.16) translate(-1.5%, -1%); } }
-.sh-half::before { content: ""; position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(180deg, rgba(5, 12, 8, .45) 0%, rgba(5, 12, 8, .1) 35%, rgba(5, 12, 8, .25) 55%, rgba(5, 12, 8, .88) 100%); }
-.sh-climb { padding-top: calc(var(--header-h) + 70px); }
-.sh-content { will-change: transform, opacity; }
-.sh-kicker { display: block; font-size: 1.5rem; color: var(--gold-soft); line-height: 1; margin-bottom: 2px; animation: rise .9s var(--ease) .35s both; }
-.sh-safari .sh-kicker { animation-delay: .55s; }
-.sh-word { display: block; overflow: hidden; padding-bottom: .04em; }
-.sh-word > span { display: block; font: 800 clamp(4.3rem, 21vw, 11rem)/.86 var(--body); letter-spacing: -.055em; text-transform: uppercase;
-  text-shadow: 0 6px 40px rgba(0, 0, 0, .35); transform: translateY(105%); animation: word-up 1.1s var(--ease) .3s forwards; }
-.sh-safari .sh-word > span { color: var(--gold-soft); animation-delay: .5s; }
-.sh-sub { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; margin-top: 12px; font-size: .95rem; font-weight: 600; line-height: 1.4;
-  animation: rise .9s var(--ease) .7s both; }
-.sh-sub small { font-size: .8rem; font-weight: 500; color: rgba(255, 255, 255, .72); }
-.sh-go { flex: none; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--gold); color: var(--forest-deep);
-  box-shadow: 0 12px 26px -10px rgba(212, 160, 84, .9); transition: transform .4s var(--spring), background .3s; }
-.sh-go .icon { width: 22px; height: 22px; }
-.sh-half:hover .sh-go, .sh-half:focus-visible .sh-go { transform: rotate(-45deg) scale(1.08); background: #fff; }
-.sh-or { position: absolute; z-index: 5; left: 50%; top: 50%; width: 104px; height: 104px; margin: -52px 0 0 -52px; border-radius: 50%;
-  display: grid; place-items: center; background: var(--paper); color: var(--forest-deep); box-shadow: 0 16px 40px rgba(0, 0, 0, .5);
-  animation: or-pop .8s var(--spring) .8s both; }
-.sh-or svg { position: absolute; inset: 0; width: 100%; height: 100%; animation: spin 18s linear infinite; }
-.sh-or text { font: 800 9.5px var(--body); letter-spacing: 2.6px; fill: var(--rust); }
-.sh-or span { font: 700 2.1rem/1 var(--hand); margin-top: -4px; }
-@keyframes or-pop { from { transform: scale(0) rotate(-90deg); } }
-@keyframes spin { to { transform: rotate(360deg); } }
+/* ---------- ticket hero: "Your ticket to the Roof of Africa" */
+.ticket-hero { position: relative; min-height: 100vh; min-height: 100svh; display: flex; align-items: center; overflow: hidden; isolation: isolate; color: #fff; background: #0b1a12;
+  padding: calc(var(--header-h) + 24px) 0 48px; }
+.th-bg { position: absolute; inset: -40px; z-index: -2; }
+.th-bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.12);
+  filter: blur(10px) saturate(1.1) brightness(.55); transition: opacity 1.2s var(--ease), transform 8s ease-out; }
+.th-bg img.is-on { opacity: 1; transform: scale(1.02); }
+.ticket-hero::after { content: ""; position: absolute; inset: 0; z-index: -1;
+  background: radial-gradient(80% 70% at 75% 55%, rgba(212, 160, 84, .18), transparent 60%), linear-gradient(180deg, rgba(5, 12, 8, .35), rgba(5, 12, 8, .15) 40%, rgba(5, 12, 8, .7)); }
+.th-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(32px, 5vw, 80px); align-items: center; }
+.th-copy h1 { color: #fff; font-size: clamp(2.5rem, 5.4vw, 4.6rem); max-width: 13ch; margin-bottom: .4em; animation: rise 1s var(--ease) .15s both; }
+.th-copy h1 em { font-style: italic; font-weight: 400; color: var(--gold-soft); }
+.th-copy .karibu { animation: rise .9s var(--ease) both; }
+.th-copy .lead { color: rgba(255, 255, 255, .84); max-width: 46ch; animation: rise 1s var(--ease) .3s both; }
+.th-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; animation: rise 1s var(--ease) .45s both; }
 
-@media (min-width: 900px) {
-  .split-hero { flex-direction: row; }
-  .sh-half { padding: 0 3.6vw 7vh; }
-  .sh-climb { padding-top: 0; }
-  .sh-word > span { font-size: clamp(5rem, 10vw, 10rem); white-space: nowrap; }
-  .sh-sub { max-width: 34vw; font-size: 1.05rem; }
-  .sh-title { top: calc(var(--header-h) + 22px); }
-  .split-hero:hover .sh-half { flex-grow: .75; }
-  .split-hero .sh-half:hover { flex-grow: 1.35; }
-  .split-hero:hover .sh-half:not(:hover) img { filter: brightness(.55) saturate(.75); }
-  .sh-or { top: 54%; width: 120px; height: 120px; margin: -60px 0 0 -60px; }
+.th-ticket-wrap { justify-self: end; width: min(100%, 470px); animation: ticket-in 1.2s var(--spring) .35s both; }
+@keyframes ticket-in { from { opacity: 0; transform: translateY(80px) rotate(8deg); } }
+.th-tabs { display: inline-flex; gap: 4px; padding: 5px; margin-bottom: 16px; border-radius: 999px; background: rgba(255, 255, 255, .1);
+  border: 1px solid rgba(255, 255, 255, .18); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.th-tabs button { display: inline-flex; align-items: center; gap: 7px; padding: .62em 1.15em; border: 0; border-radius: 999px; cursor: pointer;
+  background: transparent; color: rgba(255, 255, 255, .8); font: 800 .88rem/1 var(--body); transition: background .3s, color .3s; }
+.th-tabs button .icon { width: 17px; height: 17px; }
+.th-tabs button.is-on { background: var(--paper); color: var(--forest-deep); }
+.th-stage { position: relative; perspective: 1400px; animation: ticket-float 6s ease-in-out infinite; }
+@keyframes ticket-float { 0%, 100% { transform: translateY(0) rotate(-2.5deg); } 50% { transform: translateY(-10px) rotate(-1.5deg); } }
+
+.ticket {
+  --notch: 13px; --cut: 76px;
+  display: block; background: #fffaf0; color: var(--ink); text-decoration: none; border-radius: 24px; overflow: hidden;
+  box-shadow: 0 40px 80px -24px rgba(0, 0, 0, .75);
+  -webkit-mask: radial-gradient(circle var(--notch) at 0 calc(100% - var(--cut)), #0000 98%, #000) left / 51% 100% no-repeat,
+                radial-gradient(circle var(--notch) at 100% calc(100% - var(--cut)), #0000 98%, #000) right / 51% 100% no-repeat;
+          mask: radial-gradient(circle var(--notch) at 0 calc(100% - var(--cut)), #0000 98%, #000) left / 51% 100% no-repeat,
+                radial-gradient(circle var(--notch) at 100% calc(100% - var(--cut)), #0000 98%, #000) right / 51% 100% no-repeat;
+  backface-visibility: hidden; transition: transform .8s var(--ease), opacity .5s;
 }
-@media (max-width: 899px) and (max-height: 700px) {
-  .sh-climb { padding-top: calc(var(--header-h) + 52px); }
-  .sh-title .hand { font-size: 1.35rem; }
-  .sh-word > span { font-size: 17vw; }
-  .sh-sub { font-size: .85rem; } .sh-go { width: 48px; height: 48px; }
+.ticket:not(.is-on) { position: absolute; inset: 0 0 auto 0; opacity: 0; transform: rotateY(180deg); pointer-events: none; }
+.ticket.is-on { transform: rotateY(0); }
+.ticket.is-out { transform: rotateY(-180deg); opacity: 0; }
+.t-photo { position: relative; display: block; height: 170px; }
+.t-photo img { width: 100%; height: 100%; object-fit: cover; }
+.t-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, .2), transparent 40%, rgba(0, 0, 0, .25)); }
+.t-badge, .t-class { position: absolute; z-index: 1; top: 14px; font: 800 .64rem/1 var(--body); letter-spacing: .16em; text-transform: uppercase; padding: .7em .95em; border-radius: 999px; }
+.t-badge { left: 14px; background: var(--rust); color: #fff; }
+.t-class { right: 14px; background: rgba(255, 255, 255, .9); color: var(--forest-deep); }
+.t-body { display: block; padding: 20px 22px 18px; }
+.t-route { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.t-route small, .t-meta small { display: block; font: 800 .62rem/1 var(--body); letter-spacing: .16em; text-transform: uppercase; color: #7a7f73; margin-bottom: 4px; }
+.t-route b { display: block; font: 700 2.3rem/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: -.03em; color: var(--forest-deep); }
+.t-route i { font-style: normal; font-size: .8rem; font-weight: 600; color: #5c6459; }
+.t-to { text-align: right; }
+.t-line { position: relative; flex: 1; height: 2px; margin-top: 6px; background: repeating-linear-gradient(90deg, #cdb98e 0 6px, transparent 6px 11px); }
+.t-line .icon { position: absolute; left: 50%; top: 50%; width: 26px; height: 26px; padding: 4px; margin: -13px 0 0 -13px; border-radius: 50%; background: #fffaf0; color: var(--rust); }
+.t-meta { display: grid; grid-template-columns: 1.3fr .6fr 1fr; gap: 10px; margin-top: 16px; padding-top: 16px; border-top: 1px solid #ece2cc; }
+.t-meta b { font-size: .98rem; font-weight: 800; color: var(--ink); }
+.t-foot { position: relative; display: flex; align-items: center; gap: 16px; padding: 16px 22px 18px; border-top: 2px dashed #ddcfae; height: var(--cut); }
+.t-bar { flex: 1; height: 38px; background: repeating-linear-gradient(90deg, #13201a 0 2px, transparent 2px 4px, #13201a 4px 7px, transparent 7px 9px, #13201a 9px 10px, transparent 10px 13px); opacity: .9; }
+.t-book { padding: .8em 1.3em; }
+.ticket:hover .t-book { background: var(--rust-deep); }
+.th-note { display: flex; align-items: center; gap: 8px; margin: 18px 0 0; font-size: .86rem; color: rgba(255, 255, 255, .78); }
+.th-note .icon { width: 18px; height: 18px; padding: 3px; border-radius: 50%; background: var(--wa); color: #fff; }
+
+@media (max-width: 900px) {
+  .ticket-hero { align-items: flex-start; padding-top: calc(var(--header-h) + 18px); }
+  .th-grid { grid-template-columns: 1fr; gap: 22px; }
+  .th-copy h1 { font-size: clamp(2.2rem, 10vw, 3rem); max-width: 16ch; }
+  .th-copy .lead { font-size: 1rem; }
+  .th-actions { display: none; }
+  .th-ticket-wrap { justify-self: stretch; width: 100%; max-width: 470px; }
+  .t-photo { height: 130px; }
+  .t-route b { font-size: 1.9rem; }
+}
+@media (max-width: 900px) and (max-height: 700px) {
+  .th-copy .lead { display: none; }
+  .t-photo { height: 96px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sh-half img, .sh-or svg { animation: none; }
-  .sh-word > span { transform: none; animation: none; }
+  .th-stage, .th-ticket-wrap { animation: none; }
+  .ticket { transition: none; }
 }
-.sh-or { transition: opacity .4s, scale .4s var(--ease); }
-@media (min-width: 900px) { .split-hero:hover .sh-or { opacity: 0; scale: .6; } }
-@media (max-width: 899px) {
-  .sh-climb { padding-bottom: 62px; }
-  .sh-safari { padding-top: 56px; }
-  .sh-or { width: 90px; height: 90px; margin: -45px 0 0 -45px; }
-  .sh-or text { font-size: 10.5px; letter-spacing: 2.2px; }
-  .sh-or span { font-size: 1.8rem; }
+@media (max-width: 900px) {
+  .ticket-hero-on .wa-float { opacity: 0; transform: scale(.4); pointer-events: none; }
+  .wa-float { transition: transform .35s var(--spring), opacity .3s, bottom .4s var(--ease); }
+}
+@media (max-width: 900px) and (max-height: 700px) {
+  .ticket-hero { padding-top: calc(var(--header-h) + 8px); }
+  .th-grid { gap: 14px; }
+  .th-copy h1 { font-size: 2rem; margin-bottom: 0; }
+  .th-tabs { margin-bottom: 10px; }
+  .t-photo { display: none; }
 }
