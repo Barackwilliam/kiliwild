@@ -1,38 +1,39 @@
 {% extends "base.html" %}{% load static tours_extras %}
-{% block head %}{% with slides|first as first %}<link rel="preload" as="image" href="{% static first.0 %}" fetchpriority="high">{% endwith %}{% endblock %}
+{% block head %}<link rel="preload" as="image" href="{% static 'img/slides/kilimanjaro.jpg' %}" fetchpriority="high"><link rel="preload" as="image" href="{% static 'img/slides/elephants.jpg' %}" fetchpriority="high">{% endblock %}
 {% block content %}
 
-<section class="hero" data-slider data-hero>
-  <div class="slides" aria-hidden="true">
-    {% for img, word, caption in slides %}
-    <div class="slide{% if forloop.first %} is-active{% endif %}" data-slide>
-      <img src="{% static img %}" alt="" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async">
+<section class="split-hero" data-hero aria-label="Choose your adventure">
+  <h1 class="sh-title"><span class="hand">Karibu Tanzania</span> Choose your adventure</h1>
+
+  <a class="sh-half sh-climb" href="{% url 'tours:category' 'kilimanjaro' %}">
+    <img src="{% static 'img/slides/kilimanjaro.jpg' %}" alt="Climbers' camp below Kilimanjaro at sunset" fetchpriority="high" decoding="async" data-hero-media>
+    <div class="sh-content" data-hero-content>
+      <span class="sh-kicker hand">Panda Kilimanjaro</span>
+      <span class="sh-word"><span>Climb</span></span>
+      <span class="sh-sub">
+        <span>4 routes to Uhuru Peak, 5,895m<br><small>From $1,600 · park fees included</small></span>
+        <span class="sh-go" aria-hidden="true">{% include "tours/_icon.html" with name="arrow" %}</span>
+      </span>
     </div>
-    {% endfor %}
+  </a>
+
+  <a class="sh-half sh-safari" href="{% url 'tours:category' 'safari' %}">
+    <img src="{% static 'img/slides/elephants.jpg' %}" alt="Safari jeep beside elephants at a waterhole" fetchpriority="high" decoding="async" data-hero-media>
+    <div class="sh-content" data-hero-content>
+      <span class="sh-kicker hand">Twende Safari</span>
+      <span class="sh-word"><span>Safari</span></span>
+      <span class="sh-sub">
+        <span>Serengeti · Ngorongoro · Tarangire<br><small>3 to 5 days · Big Five</small></span>
+        <span class="sh-go" aria-hidden="true">{% include "tours/_icon.html" with name="arrow" %}</span>
+      </span>
+    </div>
+  </a>
+
+  <div class="sh-or" aria-hidden="true">
+    <svg viewBox="0 0 120 120"><defs><path id="shRing" d="M60 60 m-47 0 a47 47 0 1 1 94 0 a47 47 0 1 1 -94 0"/></defs>
+      <text><textPath href="#shRing">CHAGUA · CHOOSE · CHAGUA · CHOOSE ·</textPath></text></svg>
+    <span>au</span>
   </div>
-  <div class="hero-shade"></div>
-  <div class="container hero-content" data-hero-content>
-    <span class="karibu">Karibu Tanzania</span>
-    <h1 class="split" aria-label="From the Roof of Africa to the Serengeti plains."><span class="w" aria-hidden="true"><span style="--i:0">From</span></span> <span class="w" aria-hidden="true"><span style="--i:1">the</span></span> <span class="w" aria-hidden="true"><span style="--i:2">Roof</span></span> <span class="w" aria-hidden="true"><span style="--i:3">of</span></span> <span class="w" aria-hidden="true"><span style="--i:4">Africa</span></span> <span class="w" aria-hidden="true"><span style="--i:5">to</span></span> <span class="w" aria-hidden="true"><span style="--i:6">the</span></span> <span class="w" aria-hidden="true"><span style="--i:7"><em>Serengeti</em></span></span> <span class="w" aria-hidden="true"><span style="--i:8">plains.</span></span></h1>
-    <p class="lead">Kilimanjaro climbs, Mount Meru treks and Big Five safaris with a 100% local team from Moshi & Arusha. Clear group prices, park fees included, and a tree planted for every climber.</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary btn-lg" href="{% url 'tours:category' 'kilimanjaro' %}">Climb Kilimanjaro {% include "tours/_icon.html" with name="arrow" %}</a>
-      <a class="btn btn-ghost btn-lg" href="{% url 'tours:category' 'safari' %}">Explore safaris</a>
-    </div>
-    <div class="hero-bottom">
-      <div class="slide-caption" aria-live="polite">
-        {% for img, word, caption in slides %}
-        <p class="{% if forloop.first %}is-active{% endif %}" data-caption><strong>{{ word }}</strong><span>{{ caption }}</span></p>
-        {% endfor %}
-      </div>
-      <div class="slide-dots" role="tablist" aria-label="Choose photo">
-        {% for img, word, caption in slides %}
-        <button type="button" role="tab" class="{% if forloop.first %}is-active{% endif %}" data-dot="{{ forloop.counter0 }}" aria-label="{{ word }}"><i></i></button>
-        {% endfor %}
-      </div>
-    </div>
-  </div>
-  <a class="scroll-cue" href="#routes" aria-label="Scroll down"></a>
 </section>
 
 <div class="stats-band">

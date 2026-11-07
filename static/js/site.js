@@ -447,17 +447,19 @@
     counters.forEach(function (c) { c.textContent = "0"; cio.observe(c); });
   }
 
-  // ---- hero parallax
+  // ---- hero parallax (split hero: each photo sinks, the words drift and fade)
   var hero = document.querySelector("[data-hero]");
-  var heroSlides = hero && hero.querySelector(".slides");
-  var heroContent = document.querySelector("[data-hero-content]");
+  var heroMedia = hero ? hero.querySelectorAll("[data-hero-media]") : [];
+  var heroContent = hero ? hero.querySelectorAll("[data-hero-content]") : [];
   watch(hero, "hero");
   function heroUpdate() {
     if (!hero || still || !visible.hero) return;
     var y = window.scrollY, k = y / vh;
-    heroSlides.style.transform = "translate3d(0," + (y * 0.38) + "px,0) scale(" + (1 + k * 0.1) + ")";
-    heroContent.style.transform = "translate3d(0," + (y * 0.2) + "px,0)";
-    heroContent.style.opacity = Math.max(0, 1 - k * 1.15);
+    heroMedia.forEach(function (m) { m.style.translate = "0 " + (y * 0.3).toFixed(1) + "px"; });
+    heroContent.forEach(function (c) {
+      c.style.transform = "translate3d(0," + (y * 0.15).toFixed(1) + "px,0)";
+      c.style.opacity = Math.max(0, 1 - k * 1.3);
+    });
   }
 
   // ---- summit story
