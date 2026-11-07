@@ -169,8 +169,12 @@ def about(request):
 
 @public_page
 def gallery(request):
+    live = GalleryPhoto.objects.filter(is_active=True)
+    hero_photos = [p for p in (live.filter(kind=k).order_by("?").first() for k in
+                               (GalleryPhoto.Kind.KILIMANJARO, GalleryPhoto.Kind.SAFARI, GalleryPhoto.Kind.CULTURE)) if p]
     return render(request, "tours/gallery.html", {
-        "photos": GalleryPhoto.objects.filter(is_active=True),
+        "hero_photos": hero_photos,
+        "photos": live,
         "kinds": GalleryPhoto.Kind.choices,
     })
 

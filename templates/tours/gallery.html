@@ -1,11 +1,11 @@
 {% extends "base.html" %}{% load static %}
 {% block title %}Gallery | {{ SITE_NAME }}{% endblock %}
 {% block description %}Photos from our Kilimanjaro climbs, Mount Meru treks and Tanzania safaris – Serengeti, Ngorongoro Crater, Tarangire and Lake Manyara.{% endblock %}
+{% block body_class %}light-hero{% endblock %}
 {% block content %}
-{% static 'img/safari.jpg' as hero %}
-{% include "tours/_page_hero.html" with image=hero title="Gallery" lead="Summits, safaris and the people who made it there." eyebrow="Picha" %}
+{% include "tours/_hero_polaroid.html" %}
 
-<section class="section">
+<section class="section" id="photos">
   <div class="container">
     <div class="filters" role="group" aria-label="Filter photos" data-filters>
       <button type="button" class="is-active" data-filter="all">All</button>

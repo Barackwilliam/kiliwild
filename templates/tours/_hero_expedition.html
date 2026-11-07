@@ -1,0 +1,28 @@
+{% load static %}{# #07 Expedition HUD – Kilimanjaro page #}
+<section class="xh xh-exp" aria-label="Kilimanjaro expedition">
+  <img class="xh-bg" src="{% static 'img/slides/kilimanjaro.jpg' %}" alt="" fetchpriority="high" decoding="async">
+  <div class="exp-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <div class="exp-scan" aria-hidden="true"></div>
+  <div class="container xh-inner">
+    <div class="exp-top" aria-hidden="true">
+      <div>
+        <span class="exp-rec">Live · Base camp</span>
+        <span class="exp-alt">Target altitude<b><span data-count="5895">5,895</span> m</b></span>
+      </div>
+      <div class="exp-right">
+        <span class="exp-coords">S 03°04′33″<br>E 37°21′12″<br>Kilimanjaro NP</span>
+        <svg class="exp-compass" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.5"/><circle cx="50" cy="50" r="38" fill="none" stroke="rgba(255,255,255,.22)" stroke-dasharray="2 4"/><g class="exp-needle"><path d="M50 14 L57 50 L50 46 L43 50Z" fill="#d4a054"/><path d="M50 86 L57 50 L50 54 L43 50Z" fill="rgba(255,255,255,.55)"/></g><text x="50" y="9" fill="#fff" font-size="9" text-anchor="middle" font-family="JetBrains Mono, monospace">N</text></svg>
+      </div>
+    </div>
+    <div class="exp-copy">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'tours:home' %}">Home</a> <span>/</span> Kilimanjaro</nav>
+      <span class="exp-kicker">Expedition Kilimanjaro</span>
+      <h1>Mission:<br>Uhuru Peak</h1>
+      <p>{{ info.intro }}</p>
+      <div class="xh-actions">
+        <a class="btn btn-gold btn-lg" href="#trips">See the routes {% include "tours/_icon.html" with name="arrow" %}</a>
+        <a class="btn btn-ghost btn-lg" href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">{% include "tours/_icon.html" with name="whatsapp" %} Ask a guide</a>
+      </div>
+    </div>
+  </div>
+</section>

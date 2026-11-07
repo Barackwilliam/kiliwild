@@ -1,0 +1,11 @@
+{% load static %}{# #01 Photo inside the letters – a big word band on the home page #}
+<section class="letters" data-letters aria-label="Serengeti">
+  <div class="container">
+    <span class="hand">Siringet – where the land runs on forever</span>
+    <p class="letters-word" aria-hidden="true" style="--img: url('{% static 'img/slides/migration.jpg' %}')">Serengeti</p>
+    <div class="letters-foot">
+      <p>Over a million wildebeest, the lions that follow them and plains that never end. Two full days of it on our 5-day safari.</p>
+      <a class="link-arrow" href="{% url 'tours:destination' 'serengeti' %}">Discover the Serengeti {% include "tours/_icon.html" with name="arrow" %}</a>
+    </div>
+  </div>
+</section>

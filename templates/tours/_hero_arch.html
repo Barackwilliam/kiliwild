@@ -1,0 +1,19 @@
+{% load static %}{# #08 Arch window – About page #}
+<section class="xh xh-arch" aria-label="About Kili Wild Adventure">
+  <div class="container arch-grid">
+    <div class="arch-copy">
+      <nav class="crumbs crumbs-dark" aria-label="Breadcrumb"><a href="{% url 'tours:home' %}">Home</a> <span>/</span> About</nav>
+      <p class="eyebrow">About us</p>
+      <h1>Locally owned, <em>born under the mountain</em></h1>
+      <p class="lead">A travel company from Moshi &amp; Arusha, founded by {{ FOUNDER_NAME }}. Our guides, cooks and porters grew up here – Kilimanjaro and the Serengeti are home.</p>
+      <div class="xh-actions">
+        <a class="btn btn-primary btn-lg" href="#story">Our story {% include "tours/_icon.html" with name="arrow" %}</a>
+        <a class="btn btn-outline btn-lg" href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">{% include "tours/_icon.html" with name="whatsapp" %} Talk to us</a>
+      </div>
+    </div>
+    <div class="arch-visual">
+      <div class="arch-window"><img src="{% static 'img/slides/kilimanjaro.jpg' %}" alt="Our climbers' camp below Kilimanjaro at sunset" fetchpriority="high" decoding="async"></div>
+      <svg class="arch-badge" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="58" fill="#173a2a"/><defs><path id="archRing" d="M60 60 m-44 0 a44 44 0 1 1 88 0 a44 44 0 1 1 -88 0"/></defs><text><textPath href="#archRing">CLIMB · SAFARI · CULTURE · KARIBU ·</textPath></text><text class="arch-star" x="60" y="69" text-anchor="middle">✦</text></svg>
+    </div>
+  </div>
+</section>

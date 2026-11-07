@@ -3,9 +3,12 @@
 {% block description %}{{ info.tagline }} {{ info.intro }}{% endblock %}
 {% block og_title %}{{ info.title|default:category_label }} – {{ SITE_NAME }}{% endblock %}
 {% block content %}
-{% include "tours/_page_hero.html" with image=hero_image title=info.title|default:category_label lead=info.tagline crumb=category_label eyebrow=category_label %}
+{% if category == "kilimanjaro" %}{% include "tours/_hero_expedition.html" %}
+{% elif category == "safari" %}{% include "tours/_hero_binocular.html" %}
+{% elif category == "mount-meru" %}{% include "tours/_hero_topo.html" %}
+{% else %}{% include "tours/_page_hero.html" with image=hero_image title=info.title|default:category_label lead=info.tagline crumb=category_label eyebrow=category_label %}{% endif %}
 
-<section class="section">
+<section class="section" id="trips">
   <div class="container">
     {% if info.intro %}<p class="intro reveal" style="margin-bottom:48px">{{ info.intro }}</p>{% endif %}
     <div class="grid grid-3">

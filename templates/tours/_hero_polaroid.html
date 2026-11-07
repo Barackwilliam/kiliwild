@@ -1,0 +1,18 @@
+{# #02 Travel-journal polaroids – Gallery page. Expects: hero_photos (up to 3 GalleryPhoto) #}
+<section class="xh xh-pol" aria-label="Gallery">
+  <div class="container pol-grid">
+    <div class="pol-copy">
+      <nav class="crumbs crumbs-dark" aria-label="Breadcrumb"><a href="{% url 'tours:home' %}">Home</a> <span>/</span> Gallery</nav>
+      <span class="hand">Picha za safari</span>
+      <h1>Postcards from <em>wild Tanzania</em></h1>
+      <p class="lead">Summits at sunrise, lions in the shade and the people who made it there. Every photo is from our own trips.</p>
+      <a class="btn btn-primary btn-lg" href="#photos">Open the album {% include "tours/_icon.html" with name="arrow" %}</a>
+    </div>
+    <div class="pol-stack" aria-hidden="true">
+      {% for ph in hero_photos %}
+      <figure class="pol pol-{{ forloop.counter }}"><img src="{{ ph.image.url }}" alt="" decoding="async"><figcaption>{{ ph.caption }}</figcaption></figure>
+      {% endfor %}
+      <div class="pol-stamp"><div><b>Moshi</b>Arusha<br>Tanzania</div></div>
+    </div>
+  </div>
+</section>

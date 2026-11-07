@@ -1,0 +1,22 @@
+{% load static %}{# #04 Binoculars – Safari page. The view cycles through animals (site.js "binoculars"). #}
+<section class="xh xh-bino" data-bino aria-label="Safari – spot the Big Five">
+  <div class="bino-view" aria-hidden="true">
+    <div class="bino-lens">
+      <img src="{% static 'img/slides/lions.jpg' %}" alt="" class="is-on" data-bino-img="Simba · 120 m" fetchpriority="high" decoding="async">
+      <img src="{% static 'img/slides/elephants.jpg' %}" alt="" data-bino-img="Tembo · 300 m" decoding="async">
+      <img src="{% static 'img/wild/duma.jpg' %}" alt="" data-bino-img="Duma · 90 m" decoding="async">
+    </div>
+    <div class="bino-ring"></div>
+    <div class="bino-hud"><span class="bino-target"></span><span data-bino-label>Simba · 120 m</span></div>
+  </div>
+  <div class="container bino-copy">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'tours:home' %}">Home</a> <span>/</span> Safari</nav>
+    <small>Serengeti · Ngorongoro · Tarangire · Manyara</small>
+    <h1>Spot the <em>Big Five</em></h1>
+    <p>{{ info.intro }}</p>
+    <div class="xh-actions">
+      <a class="btn btn-gold btn-lg" href="#trips">See safaris {% include "tours/_icon.html" with name="arrow" %}</a>
+      <a class="btn btn-ghost btn-lg" href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">{% include "tours/_icon.html" with name="whatsapp" %} Plan with us</a>
+    </div>
+  </div>
+</section>

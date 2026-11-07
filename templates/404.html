@@ -1,13 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Page not found | {{ SITE_NAME }}{% endblock %}
-{% block body_class %}solid-header{% endblock %}
 {% block content %}
-<section class="section">
-  <div class="container narrow center">
-    <p class="eyebrow">404</p>
-    <h1>This trail doesn't go anywhere</h1>
-    <p class="muted">The page you were looking for has moved or never existed.</p>
-    <p><a class="btn btn-primary" href="{% url 'tours:home' %}">Back to home</a></p>
-  </div>
-</section>
+{% url 'tours:home' as home_url %}
+{% include "tours/_cta.html" with cta_title="This trail doesn't go anywhere… but the sunrise is still there." cta_text="The page you were looking for has moved or never existed. Head back home, or ask us anything on WhatsApp." %}
+<p class="lost-home"><a class="btn btn-primary btn-lg" href="{{ home_url }}">Back to home</a></p>
 {% endblock %}

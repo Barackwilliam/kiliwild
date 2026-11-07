@@ -654,3 +654,33 @@
   document.addEventListener("visibilitychange", schedule);
   schedule();
 })();
+
+// ---- safari binoculars: look at a different animal every few seconds
+(function () {
+  "use strict";
+  var b = document.querySelector("[data-bino]");
+  if (!b || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var imgs = b.querySelectorAll("[data-bino-img]"), label = b.querySelector("[data-bino-label]"), i = 0;
+  setInterval(function () {
+    if (document.hidden) return;
+    i = (i + 1) % imgs.length;
+    imgs.forEach(function (im, k) { im.classList.toggle("is-on", k === i); });
+    label.textContent = imgs[i].dataset.binoImg;
+  }, 3800);
+})();
+
+// ---- letters band: the photo inside "SERENGETI" slides as you scroll past
+(function () {
+  "use strict";
+  var el = document.querySelector("[data-letters] .letters-word");
+  if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var tick = false;
+  window.addEventListener("scroll", function () {
+    if (tick) return; tick = true;
+    requestAnimationFrame(function () {
+      var r = el.getBoundingClientRect(), k = 1 - (r.top + r.height) / (window.innerHeight + r.height);
+      if (k >= 0 && k <= 1) el.style.setProperty("--pos", (20 + k * 60).toFixed(1) + "%");
+      tick = false;
+    });
+  }, { passive: true });
+})();

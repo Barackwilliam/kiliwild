@@ -4,20 +4,7 @@
 {% block og_title %}{{ dest.name }} – {{ SITE_NAME }}{% endblock %}
 {% block og_image %}{% if dest.image %}{{ dest.image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
 {% block content %}
-<section class="page-hero page-hero-tall">
-  {% if dest.image %}<div class="page-hero-bg" aria-hidden="true"><img src="{{ dest.image.url }}" alt="" fetchpriority="high" decoding="async"></div>{% endif %}
-  <div class="container">
-    <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'tours:home' %}">Home</a> <span>/</span> <a href="{% url 'tours:destinations' %}">Destinations</a> <span>/</span> {{ dest.name }}</nav>
-    <span class="karibu">{{ dest.swahili }}</span>
-    <h1>{{ dest.name }}</h1>
-    <p class="lead">{{ dest.tagline }}</p>
-    <div class="hero-chips">
-      <span>{% include "tours/_icon.html" with name="compass" %} {{ dest.get_kind_display }}</span>
-      {% if dest.size %}<span>{% include "tours/_icon.html" with name="mountain" %} {{ dest.size }}</span>{% endif %}
-      {% if dest.known_for %}<span>{% include "tours/_icon.html" with name="target" %} {{ dest.known_for }}</span>{% endif %}
-    </div>
-  </div>
-</section>
+{% include "tours/_hero_magazine.html" %}
 
 <section class="section">
   <div class="container dest-layout">

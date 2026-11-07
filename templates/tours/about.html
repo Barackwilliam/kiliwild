@@ -1,11 +1,11 @@
 {% extends "base.html" %}{% load static %}
 {% block title %}About us | {{ SITE_NAME }}{% endblock %}
 {% block description %}Kili Wild Adventure is a locally owned travel company in Moshi & Arusha, founded by {{ FOUNDER_NAME }}. Authentic, safe and affordable Kilimanjaro climbs and Tanzania safaris.{% endblock %}
+{% block body_class %}light-hero{% endblock %}
 {% block content %}
-{% static 'img/summit-team.jpg' as hero %}
-{% include "tours/_page_hero.html" with image=hero title="Your gateway to Tanzania's wild heart" lead="A locally owned company from Moshi & Arusha, founded by people who grew up under Kilimanjaro." crumb="About" eyebrow="About us" %}
+{% include "tours/_hero_arch.html" %}
 
-<section class="section">
+<section class="section" id="story">
   <div class="container about-split">
     <div class="reveal">
       <p class="eyebrow">Our story</p>

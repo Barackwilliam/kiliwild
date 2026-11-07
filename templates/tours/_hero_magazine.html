@@ -1,0 +1,22 @@
+{# #06 Magazine cover – destination pages. Expects: dest #}
+{% with short=dest.name|cut:" National Park" %}
+<section class="xh xh-mag" aria-label="{{ dest.name }}">
+  {% if dest.image %}<img class="xh-bg" src="{{ dest.image.url }}" alt="" fetchpriority="high" decoding="async">{% endif %}
+  <div class="mag-head">
+    <h1 class="mag-mast" style="--n: {{ short|length }}">{{ short }}</h1>
+    <div class="mag-issue">
+      <span>{{ dest.swahili }}</span>
+      <a href="{% url 'tours:destinations' %}">All destinations</a>
+    </div>
+  </div>
+  <div class="container mag-foot">
+    <ul class="mag-lines">
+      <li class="mag-tagline"><b>{{ dest.tagline }}</b></li>
+      {% for h in dest.highlights_list|slice:":3" %}<li><span class="num">{{ forloop.counter|stringformat:"02d" }}</span><span>{{ h }}</span></li>{% endfor %}
+    </ul>
+    <a class="mag-code" href="https://wa.me/{{ WHATSAPP_NUMBER }}?text={{ 'Hello Kili Wild Adventure! I would like to visit '|urlencode }}{{ dest.name|urlencode }}" target="_blank" rel="noopener">
+      <i aria-hidden="true"></i><span>Plan a trip on WhatsApp</span>
+    </a>
+  </div>
+</section>
+{% endwith %}

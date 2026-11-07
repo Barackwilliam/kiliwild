@@ -1,0 +1,30 @@
+{% load static %}{# #09 Topographic – Mount Meru page #}
+<section class="xh xh-topo" aria-label="Mount Meru">
+  <svg class="topo-lines" viewBox="0 0 400 860" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g fill="none" stroke="#d4a054" stroke-width="1.2">
+      <path d="M200 140 C260 150 280 220 250 280 C220 330 150 330 130 270 C110 210 140 135 200 140Z" stroke-opacity=".34"/>
+      <path d="M200 105 C290 110 320 220 285 300 C250 370 140 380 105 300 C75 225 110 100 200 105Z" stroke-opacity=".3"/>
+      <path d="M200 70 C320 70 360 220 320 320 C280 410 125 425 80 330 C40 240 80 70 200 70Z" stroke-opacity=".27"/>
+      <path d="M200 35 C350 30 400 220 355 340 C310 450 110 470 55 360 C5 260 50 40 200 35Z" stroke-opacity=".24"/>
+      <path d="M200 0 C380 -10 440 220 390 360 C340 490 95 515 30 390 C-30 280 20 10 200 0Z" stroke-opacity=".2"/>
+      <path d="M200 -35 C410 -50 480 220 425 380 C370 530 80 560 5 420 C-65 300 -10 -20 200 -35Z" stroke-opacity=".17"/>
+      <path d="M200 -70 C440 -90 520 220 460 400 C400 570 65 605 -20 450 C-100 320 -40 -50 200 -70Z" stroke-opacity=".14"/>
+      <path d="M200 -105 C470 -130 560 220 495 420 C430 610 50 650 -45 480 C-135 340 -70 -80 200 -105Z" stroke-opacity=".11"/>
+      <path d="M200 -140 C500 -170 600 220 530 440 C460 650 35 695 -70 510 C-170 360 -100 -110 200 -140Z" stroke-opacity=".08"/>
+    </g>
+  </svg>
+  <div class="topo-peak" aria-hidden="true"><i></i><b>Socialist Peak · <span data-count="4566">4,566</span>m</b></div>
+  <div class="topo-orb o1" aria-hidden="true"><img src="{% static 'img/map/meru.jpg' %}" alt="" decoding="async"></div>
+  <div class="topo-orb o2" aria-hidden="true"><img src="{% static 'img/wild/twiga.jpg' %}" alt="" decoding="async"></div>
+  <div class="topo-orb o3" aria-hidden="true"><img src="{% static 'img/zones/moorland.jpg' %}" alt="" decoding="async"></div>
+  <div class="container topo-copy">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'tours:home' %}">Home</a> <span>/</span> Mount Meru</nav>
+    <span class="hand">Mlima Meru</span>
+    <h1>Every line leads to <em>Socialist Peak</em></h1>
+    <p>{{ info.intro }}</p>
+    <div class="xh-actions">
+      <a class="btn btn-gold btn-lg" href="#trips">See the treks {% include "tours/_icon.html" with name="arrow" %}</a>
+      <a class="btn btn-ghost btn-lg" href="{% url 'tours:category' 'combo' %}">Meru + Kili combo</a>
+    </div>
+  </div>
+</section>

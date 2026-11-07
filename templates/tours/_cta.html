@@ -1,16 +1,27 @@
-{% load static %}<section class="cta">
-  <div class="cta-bg" aria-hidden="true"><img src="{% static 'img/slides/kilimanjaro.jpg' %}" alt="" loading="lazy" decoding="async"></div>
-  <div class="container cta-inner reveal">
-    <div>
-      <p class="eyebrow eyebrow-light">Start planning</p>
-      <h2>{{ cta_title|default:"Ready for your Tanzania adventure?" }}</h2>
-      <p>Tell us your dates and group size on WhatsApp – we reply fast and plan every detail with you, from airport pickup to the summit.</p>
+{# #10 Sunrise call-to-action, used at the end of every page. Optional: cta_title, cta_text #}
+<section class="cta-sun" aria-label="Plan your trip">
+  <div class="sun-stars" aria-hidden="true"></div>
+  <div class="sun-disc" aria-hidden="true"></div>
+  <svg class="sun-land" viewBox="0 0 1440 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <path d="M0 420 L0 300 L180 262 L380 236 L560 196 L640 168 L700 150 L736 120 L760 132 L786 112 L820 146 L900 186 L1080 236 L1260 262 L1440 290 L1440 420Z" fill="#3a1f2a" opacity=".55"/>
+    <path d="M0 420 L0 320 C220 310 420 280 560 236 C640 210 690 168 716 140 Q740 120 764 134 C800 160 860 210 960 246 C1120 296 1300 312 1440 318 L1440 420Z" fill="#241218"/>
+    <path d="M706 146 Q738 116 772 138 L760 146 L748 139 L738 150 L726 141 L716 149Z" fill="#ffe7c2"/>
+    <rect x="0" y="360" width="1440" height="60" fill="#140a0c"/>
+    <g fill="#140a0c" stroke="#140a0c">
+      <path d="M260 362 V322 M260 330 l-16 -16 M260 334 l14 -14" stroke-width="3.5" fill="none"/><ellipse cx="260" cy="312" rx="46" ry="10"/>
+      <path d="M1180 362 V330" stroke-width="3.5"/><ellipse cx="1180" cy="324" rx="34" ry="8"/>
+      <path d="M1052 362 L1052 326 L1047 310 L1042 282 L1047 277 L1054 289 L1059 320 L1073 325 L1085 325 L1088 362 L1083 362 L1081 340 L1066 340 L1063 362Z" stroke="none"/>
+      <path d="M1010 362 L1010 334 L1006 322 L1003 302 L1007 299 L1012 308 L1016 330 L1027 333 L1036 333 L1038 362 L1034 362 L1032 346 L1020 346 L1018 362Z" stroke="none"/>
+    </g>
+  </svg>
+  <div class="container sun-copy reveal">
+    <span class="hand">Alfajiri kwenye Paa la Afrika</span>
+    <h2>{{ cta_title|default:"Ready to watch the sun rise over all of Africa?" }}</h2>
+    <p>{{ cta_text|default:"Tell us your dates and group size on WhatsApp – we reply fast and plan every detail with you, from airport pickup to the summit." }}</p>
+    <div class="sun-actions">
+      <a class="btn btn-wa btn-lg" href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">{% include "tours/_icon.html" with name="whatsapp" %} Chat on WhatsApp</a>
+      <a class="btn btn-ghost btn-lg" href="{% url 'tours:contact' %}">Contact us</a>
     </div>
-    <div class="cta-actions">
-      <a class="btn btn-wa btn-lg" href="{{ WHATSAPP_URL }}" target="_blank" rel="noopener">
-        {% include "tours/_icon.html" with name="whatsapp" %} Chat on WhatsApp
-      </a>
-      <small>{{ CONTACT_PHONE }} · {{ CONTACT_EMAIL }}</small>
-    </div>
+    <small>{{ CONTACT_PHONE }} · {{ CONTACT_EMAIL }}</small>
   </div>
 </section>
