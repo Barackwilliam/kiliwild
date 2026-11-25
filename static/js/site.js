@@ -615,46 +615,6 @@
   requestAnimationFrame(loop);
 })();
 
-// ---- ticket hero: switch between the Climb and Safari tickets (auto every few seconds, or on tap)
-(function () {
-  "use strict";
-  var hero = document.querySelector("[data-ticket-hero]");
-  if (!hero) return;
-  var tabs = hero.querySelectorAll("[data-th-tab]");
-  var tickets = hero.querySelectorAll("[data-th-ticket]");
-  var bgs = hero.querySelectorAll("[data-th-bg]");
-  if ("IntersectionObserver" in window) {               // phones: hide the floating WhatsApp button while it would cover the ticket
-    new IntersectionObserver(function (e) {
-      document.documentElement.classList.toggle("ticket-hero-on", e[0].intersectionRatio > 0.55);
-    }, { threshold: [0, 0.55, 1] }).observe(hero);
-  }
-  if (tickets.length < 2) { hero.querySelector(".th-tabs").hidden = true; return; }
-  var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var current = "climb", timer = null, paused = false;
-  function show(name) {
-    if (name === current) return;
-    current = name;
-    tickets.forEach(function (t) {
-      var on = t.dataset.thTicket === name;
-      t.classList.toggle("is-out", !on && t.classList.contains("is-on"));
-      t.classList.toggle("is-on", on);
-      setTimeout(function () { t.classList.remove("is-out"); }, 800);
-    });
-    tabs.forEach(function (b) { var on = b.dataset.thTab === name; b.classList.toggle("is-on", on); b.setAttribute("aria-selected", on ? "true" : "false"); });
-    bgs.forEach(function (i) { i.classList.toggle("is-on", i.dataset.thBg === name); });
-  }
-  function schedule() {
-    clearTimeout(timer);
-    if (still || paused || document.hidden) return;
-    timer = setTimeout(function () { show(current === "climb" ? "safari" : "climb"); schedule(); }, 6000);
-  }
-  tabs.forEach(function (b) { b.addEventListener("click", function () { paused = true; clearTimeout(timer); show(b.dataset.thTab); }); });
-  hero.querySelector(".th-stage").addEventListener("pointerenter", function () { clearTimeout(timer); });
-  hero.querySelector(".th-stage").addEventListener("pointerleave", schedule);
-  document.addEventListener("visibilitychange", schedule);
-  schedule();
-})();
-
 // ---- safari binoculars: look at a different animal every few seconds
 (function () {
   "use strict";
@@ -683,4 +643,92 @@
       tick = false;
     });
   }, { passive: true });
+})();
+
+// ---- swipe deck (home hero): drag the top card, or use the buttons. Right / green = book on WhatsApp,
+//      left / red = next trip, i or tap = trip page. Cards loop forever.
+(function () {
+  "use strict";
+  var deck = document.querySelector("[data-deck]");
+  if (!deck) return;
+  var cards = Array.prototype.slice.call(deck.querySelectorAll("[data-card]"));
+  var hero = deck.closest("section");
+  if ("IntersectionObserver" in window) {         // phones: hide the floating WhatsApp button over the deck buttons
+    new IntersectionObserver(function (e) {
+      document.documentElement.classList.toggle("deck-hero-on", e[0].intersectionRatio > 0.55);
+    }, { threshold: [0, 0.55, 1] }).observe(hero);
+  }
+  if (!cards.length) return;
+  var order = cards.slice(), busy = false;
+  function layout() {
+    order.forEach(function (c, i) {
+      c.dataset.pos = i < 3 ? String(i) : "hide";
+      c.style.zIndex = String(order.length - i);
+      c.setAttribute("aria-hidden", i === 0 ? "false" : "true");
+      c.style.transform = ""; c.style.removeProperty("--yes"); c.style.removeProperty("--no");
+    });
+  }
+  function top() { return order[0]; }
+  function fly(dir) {                              // dir: 1 = right (yes), -1 = left (no)
+    if (busy) return; busy = true;
+    var c = top();
+    c.style.setProperty(dir > 0 ? "--yes" : "--no", "1");
+    c.style.transform = "translate(" + (dir * 140) + "%, -6%) rotate(" + (dir * 24) + "deg)";
+    c.style.opacity = "0";
+    setTimeout(function () {
+      order.push(order.shift());
+      c.style.transition = "none"; c.style.opacity = "";
+      layout();
+      void c.offsetWidth; c.style.transition = "";
+      busy = false;
+    }, 420);
+  }
+  function yes() { var c = top(); window.open(c.dataset.wa, "_blank", "noopener"); fly(1); }
+  function no() { fly(-1); }
+  function info() { window.location.href = top().dataset.url; }
+  deck.parentNode.querySelector("[data-deck-yes]").addEventListener("click", yes);
+  deck.parentNode.querySelector("[data-deck-no]").addEventListener("click", no);
+  deck.parentNode.querySelector("[data-deck-info]").addEventListener("click", info);
+  deck.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft") { e.preventDefault(); no(); }
+    if (e.key === "ArrowRight") { e.preventDefault(); yes(); }
+    if (e.key === "Enter") info();
+  });
+
+  // dragging
+  var start = null, dx = 0, dy = 0, moved = false;
+  deck.addEventListener("pointerdown", function (e) {
+    var c = top();
+    if (busy || !c.contains(e.target)) return;
+    start = { x: e.clientX, y: e.clientY, id: e.pointerId }; dx = dy = 0; moved = false;
+    c.classList.add("is-drag");
+  });
+  deck.addEventListener("pointermove", function (e) {
+    if (!start || e.pointerId !== start.id) return;
+    dx = e.clientX - start.x; dy = e.clientY - start.y;
+    if (!moved && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) { moved = true; try { deck.setPointerCapture(e.pointerId); } catch (err) {} }
+    if (!moved) return;
+    var c = top(), k = Math.min(1, Math.abs(dx) / 120);
+    c.style.transform = "translate(" + dx + "px," + (dy * 0.25) + "px) rotate(" + (dx / 14) + "deg)";
+    c.style.setProperty("--yes", dx > 0 ? k : 0); c.style.setProperty("--no", dx < 0 ? k : 0);
+  });
+  function end() {
+    if (!start) return;
+    var c = top(); c.classList.remove("is-drag"); start = null;
+    if (!moved) return;
+    if (dx > 110) yes(); else if (dx < -110) no();
+    else { c.style.transform = ""; c.style.removeProperty("--yes"); c.style.removeProperty("--no"); }
+  }
+  deck.addEventListener("pointerup", end);
+  deck.addEventListener("pointercancel", end);
+  deck.addEventListener("click", function (e) {
+    if (moved) { e.preventDefault(); moved = false; return; }
+    if (top().contains(e.target) && !e.target.closest("a")) info();
+  }, true);
+
+  layout();
+  // show once that the cards move
+  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    setTimeout(function () { var c = top(); c.classList.add("is-nudge"); setTimeout(function () { c.classList.remove("is-nudge"); }, 1300); }, 1600);
+  }
 })();
